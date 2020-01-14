@@ -1,7 +1,15 @@
 package thesis.dfs.client;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -34,7 +42,7 @@ public class Client {
 	private static String controllerHostName;
 	private static int controllerPort;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, IOException {
 		try {//Get portnum to run on. 
 			portnum = findOpenPort();
 			ip = InetAddress.getLocalHost();
@@ -63,11 +71,6 @@ public class Client {
             if(!input.isEmpty()){
             	String[] inputSplit = input.split("\\s+");
             	
-            	/*if(input.equals("sendTest")) {
-					//TCPSender sender = new TCPSender(new Socket(args[0], Integer.parseInt(args[1])));//This is test garbage. Clean it up
-					System.out.println("what is even happening.");
-            		sendTest();
-            	}*/
             	if(inputSplit[0].equals("put") && inputSplit.length == 2) {
             		System.out.println("Sending request to store the file.");
             		String fileName = inputSplit[1];
@@ -77,8 +80,47 @@ public class Client {
             }
 		}
 	}
-	//Split the file before sending.
-	private static void splitFile(String fileName) {
+	//Split the file before sending. All part files stored under tmp.
+	private static void splitFile(String fileName) throws FileNotFoundException, IOException {
+		File file = new File(fileName);
+		
+		Integer chunkNumber = 1;
+		int sizeOfFiles = 1024 * 64;
+		byte[] buffer = new byte[sizeOfFiles];
+		
+		try(FileInputStream fileIn = new FileInputStream(file);
+			BufferedInputStream bufferedIn = new BufferedInputStream(fileIn);	) {
+			
+			Integer bytesAmount = 0;
+			while(( bytesAmount = bufferedIn.read(buffer)) > 0) {
+				
+				
+				String chunkName = file + "_chunk" + chunkNumber.toString();
+				File newChunkFile = new File(chunkName);	
+				
+				try(FileOutputStream outChunk = new FileOutputStream(newChunkFile)) {
+					outChunk.write(buffer, 0, bytesAmount);
+				}
+				
+				try {
+					FileOutputStream outMetadata = new FileOutputStream(chunkName + ".metadata");
+					ObjectOutputStream outObject = new ObjectOutputStream(outMetadata);
+					
+					outObject.writeObject(outObject);
+					
+					outObject.close();
+					outMetadata.close();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+				FileOutputStream outMetadata = new FileOutputStream(chunkName + ".metadata");
+				ObjectOutputStream outObject = new ObjectOutputStream(outMetadata);
+				
+				
+				
+				chunkNumber++;	
+			}
+		} 
 		
 	}
 	
