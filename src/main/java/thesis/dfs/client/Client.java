@@ -1,5 +1,6 @@
 package thesis.dfs.client;
 
+import java.awt.List;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -21,6 +22,8 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
+
+import org.apache.commons.math3.util.Pair;
 
 import thesis.*;
 
@@ -73,25 +76,34 @@ public class Client {
             	
             	if(inputSplit[0].equals("put") && inputSplit.length == 2) {
             		System.out.println("Sending request to store the file.");
-            		String fileName = inputSplit[1];
-            		splitFile(fileName);
-            		requestPut(inputSplit[1]);
+            		executePut(inputSplit[1]);
             	}
             }
 		}
 	}
 	//Split the file before sending. All part files stored under tmp.
-	private static void splitFile(String fileName) throws FileNotFoundException, IOException {
+	private static void executePut(String fileName) throws FileNotFoundException, IOException {
+		LinkedList<Pair<String, String>> chunkNamesAndMetadata = splitFile(fileName);
+		for(Pair<String, String> p : chunkNamesAndMetadata) {
+			requestPut(fileName, p.getKey(), p.getValue());
+		}
+		
+	}
+	
+	//Command to test: put C:\Users\adambriles1216\eclipse-workspace\Thesis\TestFiles\TestWrite.txt
+	private static LinkedList<Pair<String, String>> splitFile(String fileName) throws FileNotFoundException, IOException {
 		File file = new File(fileName);
 		
+		LinkedList<Pair<String, String>> partFileNames = new LinkedList<Pair<String, String>>();
 		Integer chunkNumber = 1;
 		int sizeOfFiles = 1024 * 64;
 		byte[] buffer = new byte[sizeOfFiles];
 		
 		try(FileInputStream fileIn = new FileInputStream(file);
-			BufferedInputStream bufferedIn = new BufferedInputStream(fileIn);	) {
+			BufferedInputStream bufferedIn = new BufferedInputStream(fileIn);) {
 			
 			Integer bytesAmount = 0;
+			int sequenceNumber = 0;
 			while(( bytesAmount = bufferedIn.read(buffer)) > 0) {
 				
 				
@@ -102,32 +114,34 @@ public class Client {
 					outChunk.write(buffer, 0, bytesAmount);
 				}
 				
+				String metadataName = chunkName + ".metadata";
 				try {
-					FileOutputStream outMetadata = new FileOutputStream(chunkName + ".metadata");
+					FileOutputStream outMetadata = new FileOutputStream(metadataName);
 					ObjectOutputStream outObject = new ObjectOutputStream(outMetadata);
 					
-					outObject.writeObject(outObject);
+					outObject.writeObject(new ChunkMetadata(sequenceNumber));
 					
 					outObject.close();
 					outMetadata.close();
+					
 				} catch(IOException e) {
 					e.printStackTrace();
 				}
-				FileOutputStream outMetadata = new FileOutputStream(chunkName + ".metadata");
-				ObjectOutputStream outObject = new ObjectOutputStream(outMetadata);
 				
-				
-				
+				partFileNames.add(new Pair<String, String>(chunkName, metadataName));
+				sequenceNumber++;
 				chunkNumber++;	
 			}
+			
 		} 
-		
+		return partFileNames;
 	}
 	
-	private static void requestPut(String fileName) {
+	private static void requestPut(String fileName, String nameChunk, String nameMetadata) {
 		try {
 			TCPSender sender = new TCPSender(createSocket(controllerHostName, controllerPort));
-			sender.sendData(new Message("PutRequest", "what what what", ip.getHostName(), portnum));
+			String messageContent = fileName + " " + nameChunk + " " + nameMetadata;
+			sender.sendData(new Message("PutRequest", messageContent, ip.getHostName(), portnum));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

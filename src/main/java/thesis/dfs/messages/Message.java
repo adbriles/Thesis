@@ -1,6 +1,7 @@
 package thesis.dfs.messages;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 
 public class Message implements Serializable{
 	private String senderHostName;
@@ -9,10 +10,25 @@ public class Message implements Serializable{
 	private String messageType;
 	private String content;
 	
+	private LinkedList<String> list;
 	
+	public Message() {
+		
+	}
 	
 	public Message(String messageType) {
 		this.messageType = messageType;
+	}
+	
+	public Message(String messageType, String content) {
+		this.messageType = messageType;
+		this.setContent(content);
+	}
+	
+	public Message(String messageType, String content, LinkedList<String> list) {
+		this.messageType = messageType;
+		this.setContent(content);
+		this.setList(list);
 	}
 	
 	public Message(String messageType, String content, String senderHostName, int senderPort) {
@@ -23,6 +39,10 @@ public class Message implements Serializable{
 	}
 	
 	public String getMessageType() {return messageType;}
+	
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
+	}
 
 	public int getSenderPort() {
 		return senderPort;
@@ -46,6 +66,14 @@ public class Message implements Serializable{
 
 	public void setSenderHostName(String senderHostName) {
 		this.senderHostName = senderHostName;
+	}
+
+	public LinkedList<String> getList() {
+		return list;
+	}
+
+	public void setList(LinkedList<String> list) {
+		this.list = list;
 	}
 	
 }
