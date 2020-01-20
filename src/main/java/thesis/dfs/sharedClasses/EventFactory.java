@@ -47,10 +47,9 @@ public class EventFactory {
 		} else if(message.getMessageType().equals("RegistrationConfirmation")) {
 			return new ChunkServerRegistrationConfirmationEvent(message);
 		} else if(message.getMessageType().equals("StoreChunkOnChunkServers")) {
-			System.out.println(message.getContent());
-			for(String s: message.getList()) {
-				System.out.println(s);
-			}
+			return new StoreAtChunkServerEvent(message);
+		} else if(message.getMessageType().equals("StoreChunk")) {
+			return new StoreChunkEvent(message);
 		}
 		
 		return null;		

@@ -1,12 +1,17 @@
 package thesis.dfs.transport;
 
+import java.io.DataInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 
 import thesis.dfs.messages.Message;
+import thesis.dfs.sharedClasses.ChunkMetadata;
 import thesis.dfs.sharedClasses.Event;
 import thesis.dfs.sharedClasses.EventFactory;
 public class TCPReceiverThread implements Runnable{
@@ -23,6 +28,50 @@ public class TCPReceiverThread implements Runnable{
 		this.threadPool = threadPool;
 	}
 	
+	public void createMetadata(String chunkName) {
+		String metadataName = chunkName + ".metadata";
+		try {
+			FileOutputStream outMetadata = new FileOutputStream(metadataName);
+			ObjectOutputStream outObject = new ObjectOutputStream(outMetadata);
+			
+			//This line gets the sequence number. It's not great, but it should work no matter what. 
+			String[] fileNameSplit = chunkName.split("\\.");
+			int sequenceNumber = Integer.parseInt(fileNameSplit[fileNameSplit.length - 1].replaceAll("[^0-9]", "")) - 1;
+			
+			outObject.writeObject(new ChunkMetadata(sequenceNumber));
+			
+			outObject.close();
+			outMetadata.close();
+			
+			
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void readAndStoreFile(Message message) throws IOException {
+		DataInputStream dis = new DataInputStream(socket.getInputStream());
+		String chunkName = message.getContent().split("\\s+")[1];
+		FileOutputStream fos = new FileOutputStream(chunkName + ".chunkServer");
+
+		byte[] buffer = new byte[4096];
+		int filesize = 1024 * 64;//This can always be assumed
+		int read = 0;
+		int totalRead = 0;
+		int remaining = filesize;
+		while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
+			totalRead += read;
+			remaining -= read;
+			fos.write(buffer, 0, read);
+		}
+		fos.close();
+		dis.close();
+		
+		createMetadata(chunkName);
+
+	}
+	
 	@Override
 	public void run() {
 		EventFactory eventFactory = EventFactory.getInstance();
@@ -30,10 +79,10 @@ public class TCPReceiverThread implements Runnable{
 			try {
 
 				Message message = (Message)ois.readObject();
+				if(message.isReadFile()) {//Next block of code reads in a file and stores it. Metadata still needs to be collected. 
+					readAndStoreFile(message);
+				}
 				Runnable event = EventFactory.createEvent(message);
-				
-				System.out.println(message.getMessageType());
-				
 				threadPool.execute(event);				
 				socket.close();
 

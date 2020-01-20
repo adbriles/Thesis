@@ -1,5 +1,6 @@
 package thesis.dfs.messages;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.LinkedList;
 
@@ -9,6 +10,11 @@ public class Message implements Serializable{
 	
 	private String messageType;
 	private String content;
+	
+	
+	private boolean readFile = false;
+	
+	private File file;
 	
 	private LinkedList<String> list;
 	
@@ -69,11 +75,27 @@ public class Message implements Serializable{
 	}
 
 	public LinkedList<String> getList() {
-		return list;
+		return new LinkedList<String>(list);
 	}
 
 	public void setList(LinkedList<String> list) {
 		this.list = list;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public boolean isReadFile() {
+		return readFile;
+	}
+
+	public void setReadFile(boolean readFile) {
+		this.readFile = readFile;
 	}
 	
 }

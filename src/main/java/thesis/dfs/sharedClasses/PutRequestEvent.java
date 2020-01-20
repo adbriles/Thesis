@@ -63,7 +63,7 @@ public class PutRequestEvent extends Event{
 			}
 			
 			//The next line makes a call that records where a chunk will be stored.
-			System.out.println(messageSplit[0] + " " + messageSplit[1]);
+			System.out.println(messageSplit[0] + " " + messageSplit[1] + message.getContent());
 			Message newMessage = new Message("StoreChunkOnChunkServers", message.getContent(), eventFactory.hostToFiles.findWhereToPlaceChunks(chunkServersToStore, messageSplit[0], messageSplit[1]));
 			sender.sendData(newMessage);
 			

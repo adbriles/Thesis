@@ -22,6 +22,28 @@ public class TCPSender {
 		oos.close();
 	}
 	
+	public void sendFile(File file, Message message) throws IOException {
+		
+		oos.writeObject(message);
+		
+		System.out.println("Tried to send a file");
+		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+		FileInputStream fis = new FileInputStream(file);
+		byte[] buffer = new byte[4096];
+		
+		//Make sure you write the same number of bytes fis read, or you end up duplicating data. 
+		int br = -1;
+		while(/*fis.read(buffer) > 0*/ (br = fis.read(buffer, 0, buffer.length)) != -1) {
+			
+			dos.write(buffer, 0, br);
+		}
+		
+		fis.close();
+		dos.close();	
+		oos.close();
+	}
+	
+	
 	public void shutDown() {
 		try {
 			oos.close();

@@ -37,6 +37,8 @@ import thesis.dfs.sharedClasses.*;
 //Clients take user inputs. Clients consist of a server thread, 
 //and a thread to handle ui. 
 
+
+//to test 	put C:\Users\adambriles1216\eclipse-workspace\Thesis\TestFiles\TestWrite.txt
 public class Client {
 	private static Integer portnum;
 	private static EventFactory eventFactory;
@@ -114,20 +116,7 @@ public class Client {
 					outChunk.write(buffer, 0, bytesAmount);
 				}
 				
-				String metadataName = chunkName + ".metadata";
-				try {
-					FileOutputStream outMetadata = new FileOutputStream(metadataName);
-					ObjectOutputStream outObject = new ObjectOutputStream(outMetadata);
-					
-					outObject.writeObject(new ChunkMetadata(sequenceNumber));
-					
-					outObject.close();
-					outMetadata.close();
-					
-				} catch(IOException e) {
-					e.printStackTrace();
-				}
-				
+				String metadataName = chunkName + ".metadata";//This code needs to go. 
 				partFileNames.add(new Pair<String, String>(chunkName, metadataName));
 				sequenceNumber++;
 				chunkNumber++;	
