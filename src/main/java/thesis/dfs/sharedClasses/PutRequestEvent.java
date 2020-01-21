@@ -20,31 +20,6 @@ public class PutRequestEvent extends Event{
 	}
 	
 
-	/*public LinkedList<Integer> getChunkServersForStorage(){
-		LinkedList<Integer> chunkServersToStore = new LinkedList<Integer>();
-		
-		while(chunkServersToStore.size() != 3) {//Get a list of chunk servers to store this chunk on
-			Random r = new Random(System.currentTimeMillis());
-			Integer possibleChunkServer = r.nextInt(eventFactory.ControllerRecordStructure.size());
-			if(!chunkServersToStore.contains(possibleChunkServer)) {
-				chunkServersToStore.add(possibleChunkServer);
-			}
-		}
-		
-		return chunkServersToStore;
-	}*/
-	
-	
-	/*public LinkedList<Integer> getChunkServersForStorageLessThanReplication(){
-		LinkedList<Integer> chunkServersToStore = new LinkedList<Integer>();
-		for(int i = 0; i < eventFactory.ControllerRecordStructure.size();i++) {
-			chunkServersToStore.add(i);
-		}
-		return chunkServersToStore;
-	}*/
-	
-	
-
 	
 	public void run() {
 		EventFactory eventFactory = EventFactory.getInstance();

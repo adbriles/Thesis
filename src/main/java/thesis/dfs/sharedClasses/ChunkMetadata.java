@@ -12,9 +12,8 @@ public class ChunkMetadata implements Serializable{
 	
 	public ChunkMetadata(int sequenceNumber) {
 		setSequenceNumber(sequenceNumber);
-		
+		updateTimestamp();
 	}
-	
 	public int getSequenceNumber() {
 		return this.sequenceNumber;
 	}
@@ -38,6 +37,4 @@ public class ChunkMetadata implements Serializable{
 	public void incrementVersion() {
 		this.version++;
 	}
-	
-	
 }

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import thesis.dfs.chunkserver.ChunkServerFileRecords;
 import thesis.dfs.messages.Message;
 
 public class EventFactory {
@@ -14,9 +15,12 @@ public class EventFactory {
 	//public static ConcurrentHashMap<String, ConcurrentHashMap<String, LinkedList<String>>> chunkServerToStoredFiles;
 	public static ControllerRecordStructure hostToFiles;
 	
+	public static ChunkServerFileRecords chunkRecords;
+	
 	
 	private EventFactory() {
 		hostToFiles = new ControllerRecordStructure();
+		chunkRecords = new ChunkServerFileRecords();
 	}
 	
 	//Thread safe singleton get instance
