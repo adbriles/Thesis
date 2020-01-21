@@ -40,6 +40,9 @@ import thesis.dfs.sharedClasses.*;
 
 //to test 	put C:\Users\adambriles1216\eclipse-workspace\Thesis\TestFiles\TestWrite.txt
 public class Client {
+	private static boolean isWindows = false;
+	
+	
 	private static Integer portnum;
 	private static EventFactory eventFactory;
 	private static Socket controllerSocket;
@@ -108,15 +111,18 @@ public class Client {
 			int sequenceNumber = 0;
 			while(( bytesAmount = bufferedIn.read(buffer)) > 0) {
 				
-				//make sure this split chunk gets written to the /tmp directory
-				String chunkName = "/tmp" +  file + "_chunk" + chunkNumber.toString();
+				String chunkName;
+				if(!isWindows) {//A check that lets me differentiate between my development environments.
+					chunkName = "/tmp" + file + "_chunk" + chunkNumber.toString();
+				} else {
+					chunkName = file + "_chunk" + chunkNumber.toString();
+				}
 				
 				File newChunkFile = new File(chunkName);	
-				newChunkFile.getParentFile().mkdirs();
-				newChunkFile.createNewFile();
 				
-				try(FileOutputStream outChunk = new FileOutputStream(newChunkFile, false)) {
-					
+				newChunkFile.getParentFile().mkdirs();
+				file.createNewFile();
+				try(FileOutputStream outChunk = new FileOutputStream(newChunkFile)) {
 					outChunk.write(buffer, 0, bytesAmount);
 				}
 				
