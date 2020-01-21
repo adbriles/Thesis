@@ -23,7 +23,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
-import org.apache.commons.math3.util.Pair;
 
 import thesis.*;
 
@@ -40,7 +39,7 @@ import thesis.dfs.sharedClasses.*;
 
 //to test 	put C:\Users\adambriles1216\eclipse-workspace\Thesis\TestFiles\TestWrite.txt
 public class Client {
-	private static boolean isWindows = false;
+	private static boolean isWindows = true;
 	
 	
 	private static Integer portnum;
@@ -88,18 +87,18 @@ public class Client {
 	}
 	//Split the file before sending. All part files stored under tmp.
 	private static void executePut(String fileName) throws FileNotFoundException, IOException {
-		LinkedList<Pair<String, String>> chunkNamesAndMetadata = splitFile(fileName);
-		for(Pair<String, String> p : chunkNamesAndMetadata) {
-			requestPut(fileName, p.getKey(), p.getValue());
+		LinkedList<String> chunkNamesAndMetadata = splitFile(fileName);
+		for(String p : chunkNamesAndMetadata) {
+			requestPut(fileName, p);
 		}
 		
 	}
 	
 	//Command to test: put C:\Users\adambriles1216\eclipse-workspace\Thesis\TestFiles\TestWrite.txt
-	private static LinkedList<Pair<String, String>> splitFile(String fileName) throws FileNotFoundException, IOException {
+	private static LinkedList<String> splitFile(String fileName) throws FileNotFoundException, IOException {
 		File file = new File(fileName);
 		
-		LinkedList<Pair<String, String>> partFileNames = new LinkedList<Pair<String, String>>();
+		LinkedList< String> partFileNames = new LinkedList<String>();
 		Integer chunkNumber = 1;
 		int sizeOfFiles = 1024 * 64;
 		byte[] buffer = new byte[sizeOfFiles];
@@ -127,7 +126,7 @@ public class Client {
 				}
 				
 				String metadataName = chunkName + ".metadata";//This code needs to go. 
-				partFileNames.add(new Pair<String, String>(chunkName, metadataName));
+				partFileNames.add(chunkName);
 				sequenceNumber++;
 				chunkNumber++;	
 			}
@@ -136,10 +135,10 @@ public class Client {
 		return partFileNames;
 	}
 	
-	private static void requestPut(String fileName, String nameChunk, String nameMetadata) {
+	private static void requestPut(String fileName, String nameChunk) {
 		try {
 			TCPSender sender = new TCPSender(createSocket(controllerHostName, controllerPort));
-			String messageContent = fileName + " " + nameChunk + " " + nameMetadata;
+			String messageContent = fileName + " " + nameChunk;
 			sender.sendData(new Message("PutRequest", messageContent, ip.getHostName(), portnum));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
