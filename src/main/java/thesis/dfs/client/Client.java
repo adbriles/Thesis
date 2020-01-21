@@ -108,8 +108,8 @@ public class Client {
 			int sequenceNumber = 0;
 			while(( bytesAmount = bufferedIn.read(buffer)) > 0) {
 				
-				
-				String chunkName = file + "_chunk" + chunkNumber.toString();
+				//make sure this split chunk gets written to the /tmp directory
+				String chunkName = "/tmp/" +  file + "_chunk" + chunkNumber.toString();
 				File newChunkFile = new File(chunkName);	
 				
 				try(FileOutputStream outChunk = new FileOutputStream(newChunkFile)) {
