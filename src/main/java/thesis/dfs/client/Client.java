@@ -39,7 +39,7 @@ import thesis.dfs.sharedClasses.*;
 
 //to test 	put C:\Users\adambriles1216\eclipse-workspace\Thesis\TestFiles\TestWrite.txt
 public class Client {
-	private static boolean isWindows = true;
+	private static boolean isWindows = false;
 	
 	
 	private static Integer portnum;
