@@ -22,7 +22,6 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
-import org.apache.commons.io.FileUtils;
 
 import org.apache.commons.math3.util.Pair;
 
@@ -111,9 +110,12 @@ public class Client {
 				
 				//make sure this split chunk gets written to the /tmp directory
 				String chunkName = "/tmp" +  file + "_chunk" + chunkNumber.toString();
-				File newChunkFile = new File(chunkName);	
 				
-				try(FileOutputStream outChunk = FileUtils.openOutputStream((newChunkFile))) {
+				File newChunkFile = new File(chunkName);	
+				newChunkFile.getParentFile().mkdirs();
+				newChunkFile.createNewFile();
+				
+				try(FileOutputStream outChunk = new FileOutputStream(newChunkFile, false)) {
 					
 					outChunk.write(buffer, 0, bytesAmount);
 				}
