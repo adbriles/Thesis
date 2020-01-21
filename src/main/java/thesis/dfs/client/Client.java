@@ -22,6 +22,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
+import org.apache.commons.io.FileUtils;
 
 import org.apache.commons.math3.util.Pair;
 
@@ -112,7 +113,8 @@ public class Client {
 				String chunkName = "/tmp" +  file + "_chunk" + chunkNumber.toString();
 				File newChunkFile = new File(chunkName);	
 				
-				try(FileOutputStream outChunk = new FileOutputStream(newChunkFile)) {
+				try(FileOutputStream outChunk = FileUtils.openOutputStream((newChunkFile))) {
+					
 					outChunk.write(buffer, 0, bytesAmount);
 				}
 				
