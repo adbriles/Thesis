@@ -120,7 +120,7 @@ public class Client {
 				File newChunkFile = new File(chunkName);	
 				
 				newChunkFile.getParentFile().mkdirs();
-				file.createNewFile();
+				newChunkFile.createNewFile();
 				try(FileOutputStream outChunk = new FileOutputStream(newChunkFile)) {
 					outChunk.write(buffer, 0, bytesAmount);
 				}

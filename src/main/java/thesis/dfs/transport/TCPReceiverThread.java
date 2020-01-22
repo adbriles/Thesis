@@ -1,6 +1,7 @@
 package thesis.dfs.transport;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -53,7 +54,11 @@ public class TCPReceiverThread implements Runnable{
 	public void readAndStoreFile(Message message) throws IOException {
 		DataInputStream dis = new DataInputStream(socket.getInputStream());
 		String chunkName = message.getContent().split("\\s+")[1];
-		FileOutputStream fos = new FileOutputStream(chunkName + ".chunkServer");
+		
+		File file = new File(chunkName + ".chunkServer");
+		file.getParentFile().mkdirs();
+		file.createNewFile();
+		FileOutputStream fos = new FileOutputStream(file);
 
 		byte[] buffer = new byte[4096];
 		int filesize = 1024 * 64;//This can always be assumed
