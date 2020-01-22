@@ -55,7 +55,7 @@ public class TCPReceiverThread implements Runnable{
 		DataInputStream dis = new DataInputStream(socket.getInputStream());
 		String chunkName = message.getContent().split("\\s+")[1];
 		
-		File file = new File(chunkName + ".chunkServer");
+		File file = new File(chunkName);
 		file.getParentFile().mkdirs();
 		file.createNewFile();
 		FileOutputStream fos = new FileOutputStream(file);
