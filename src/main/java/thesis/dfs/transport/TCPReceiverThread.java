@@ -27,6 +27,7 @@ public class TCPReceiverThread implements Runnable{
 		//din = new DataInputStream(socket.getInputStream());
 		ois = new ObjectInputStream(socket.getInputStream());
 		this.threadPool = threadPool;
+		
 	}
 	
 	public void createMetadata(String chunkName) {
@@ -54,6 +55,7 @@ public class TCPReceiverThread implements Runnable{
 	public void readAndStoreFile(Message message) throws IOException {
 		DataInputStream dis = new DataInputStream(socket.getInputStream());
 		String chunkName = message.getContent().split("\\s+")[1];
+		System.out.println("Tring to store: " + chunkName);
 		
 		File file = new File(chunkName);
 		file.getParentFile().mkdirs();
