@@ -31,7 +31,7 @@ public class PutRequestEvent extends Event{
 			LinkedList<Integer> chunkServersToStore;
 			
 			System.out.println("There are this many registeredNodes: " + eventFactory.hostToFiles.getUnsafeNumberChunks());
-			
+			System.out.flush();
 			
 			if(eventFactory.hostToFiles.getUnsafeNumberChunks() < 3) {//!!!!!!!!!!!!!!!!This is a race condition. It's only currently in here for testing!!!!!!!!!!!!!!!!!!!!!!!!
 				chunkServersToStore = eventFactory.hostToFiles.getChunkServersForStorageLessThanReplication();
