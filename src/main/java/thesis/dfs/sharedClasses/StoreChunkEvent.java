@@ -25,6 +25,7 @@ public class StoreChunkEvent implements Runnable{
 		LinkedList<String> newList = message.getList();		
 		
 		if(newList.size() > 0) {
+			System.out.println("Chunk Server is passing a file.");
 			String[] nextChunk = newList.remove(0).split("\\s+");
 			try {
 				TCPSender sender = new TCPSender(new Socket(nextChunk[0], Integer.parseInt(nextChunk[1])));
