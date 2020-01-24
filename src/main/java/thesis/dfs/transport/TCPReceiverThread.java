@@ -32,6 +32,7 @@ public class TCPReceiverThread implements Runnable{
 	
 	public void createMetadata(String chunkName) {
 		String metadataName = chunkName + ".metadata";
+		System.out.println("Creating the metadata file: " + metadataName);
 		try {
 			FileOutputStream outMetadata = new FileOutputStream(metadataName);
 			ObjectOutputStream outObject = new ObjectOutputStream(outMetadata);
