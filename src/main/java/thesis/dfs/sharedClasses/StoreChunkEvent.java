@@ -36,6 +36,7 @@ public class StoreChunkEvent implements Runnable{
 				e.printStackTrace();
 			}
 			
+			
 		
 		}
 		eventFactory.chunkRecords.addChunkFile(message.getContent().split("\\s+")[1]);
