@@ -43,6 +43,7 @@ public class EventFactory {
 	public static Runnable createEvent(Message message) {
 
 		if(message.getMessageType().equals("PutRequest")) {
+			System.out.println("why isn't this printing");
 			return new PutRequestEvent(message); 
 		} else if(message.getMessageType().equals("ResponseFromController")) {
 			System.out.println("A whole exchange took place");
