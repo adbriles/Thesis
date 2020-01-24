@@ -35,6 +35,11 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 				counter++;
 			}
 		}		
+		System.out.println("List of chunkServers: ");
+		for(String s: chunkServerNames) {
+			System.out.println();
+		}
+		System.out.println();
 		return chunkServerNames;
 		
 
