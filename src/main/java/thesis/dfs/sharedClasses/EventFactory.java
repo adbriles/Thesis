@@ -41,9 +41,7 @@ public class EventFactory {
 	
 	//Return a runnable event that a receiver thread will toss on a thread pool.
 	public static Runnable createEvent(Message message) {
-		System.out.println("why isn't this printing");
 		if(message.getMessageType().equals("PutRequest")) {
-			System.out.println("what what");
 			return new PutRequestEvent(message); 
 		} else if(message.getMessageType().equals("ResponseFromController")) {
 			System.out.println("A whole exchange took place");
