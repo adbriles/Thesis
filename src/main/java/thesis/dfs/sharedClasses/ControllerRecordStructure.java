@@ -21,6 +21,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	
 	public ControllerRecordStructure() {
 		chunkServerToStoredFiles = new HashMap<String, HashMap<String, LinkedList<String>>>();
+		chunkServerNames = new LinkedList<String>();
 	}
 
 
