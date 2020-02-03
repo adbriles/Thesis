@@ -38,6 +38,8 @@ import thesis.dfs.sharedClasses.*;
 
 
 //to test 	put C:\Users\adambriles1216\eclipse-workspace\Thesis\TestFiles\TestWrite.txt
+
+//to test with linux	put /s/bach/d/under/adbriles/Thesis/TestFiles/TestWrite.txt
 public class Client {
 	private static boolean isWindows = false;
 	

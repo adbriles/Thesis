@@ -8,6 +8,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ControllerRecordStructure {//This is built on top of concurrent structures, but some compound actions need to happen
 	private ConcurrentHashMap<String, ConcurrentHashMap<String, LinkedList<String>>> chunkServerToStoredFiles;
 	
+	public synchronized void printChunkServers() {
+		for(Map.Entry<String, ConcurrentHashMap<String, LinkedList<String>>> m : chunkServerToStoredFiles.entrySet()) {
+			System.out.println(m.getKey());
+			System.out.flush();
+		}
+	}
+	
 	
 	public ControllerRecordStructure() {
 		chunkServerToStoredFiles = new ConcurrentHashMap<String, ConcurrentHashMap<String, LinkedList<String>>>();

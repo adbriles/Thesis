@@ -8,7 +8,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import thesis.dfs.controller.EventFactory;
+import thesis.dfs.sharedClasses.EventFactory;
 import thesis.dfs.messages.Message;
 import thesis.dfs.transport.TCPSender;
 import thesis.dfs.transport.TCPServerThread;
@@ -42,9 +42,19 @@ public class ChunkServer {
 		registerWithController();
 		
 		
-		boolean continueFunction = true;
-		while(continueFunction) {
-			
+		EventFactory eventFactory = EventFactory.getInstance();
+		boolean getUserInput = true;
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("The client can now recieve user input:");
+		while(getUserInput) {
+            String input = scanner.nextLine();
+            if(!input.isEmpty()){
+            	String[] inputSplit = input.split("\\s+");
+            	
+            	if(inputSplit[0].equals("getChunkServers")) {
+            		eventFactory.hostToFiles.printChunkServers();
+            	}
+            }
 		}
 	}
 	
