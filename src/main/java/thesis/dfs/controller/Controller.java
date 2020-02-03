@@ -54,6 +54,7 @@ public class Controller {
             	String[] inputSplit = input.split("\\s+");
             	
             	if(inputSplit[0].equals("getChunkServers")) {
+            		System.out.println("The chunk servers are: ");
             		eventFactory.hostToFiles.printChunkServers();
             	}
             }
