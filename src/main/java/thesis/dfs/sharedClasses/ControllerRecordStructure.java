@@ -8,14 +8,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ControllerRecordStructure {//This is built on top of concurrent structures, but some compound actions need to happen
 	private HashMap<String, HashMap<String, LinkedList<String>>> chunkServerToStoredFiles;
+	private LinkedList<String> chunkServerNames;
 	
 	public synchronized void printChunkServers() {
-		System.out.println("If I'm getting here I'm failing to get the locks and act on the data structure.");
-		for(Map.Entry<String, HashMap<String, LinkedList<String>>> m : chunkServerToStoredFiles.entrySet()) {
-			System.out.println(m.getKey() + " wtf");
+		System.out.println("What the mother fuck is going on");
+		for(String s: chunkServerNames) {
+			System.out.println(s);
 			System.out.flush();
 		}
-		System.out.println("Either nothing is in there or I can't get all the locks " + chunkServerToStoredFiles.size());
 	}
 	
 	
@@ -62,7 +62,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	
 	public synchronized void addChunkServer(String name) {
 		chunkServerToStoredFiles.put(name, new HashMap<String, LinkedList<String>>());
-		System.out.println("Chunk server was added with name: " + name);
+		chunkServerNames.add(name);
 	}
 	
 	public synchronized LinkedList<Integer> getChunkServersForStorage(){

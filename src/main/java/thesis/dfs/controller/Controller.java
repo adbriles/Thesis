@@ -44,7 +44,6 @@ public class Controller {
 
 		
 		System.out.println("Controller Online");
-		EventFactory eventFactory = EventFactory.getInstance();
 		boolean getUserInput = true;
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("The Controller can now recieve user input:");
@@ -55,7 +54,7 @@ public class Controller {
             	
             	if(inputSplit[0].equals("getChunkServers")) {
             		System.out.println("The chunk servers are: ");
-            		eventFactory.hostToFiles.printChunkServers();
+            		EventFactory.hostToFiles.printChunkServers();
             	}
             }
 		}
