@@ -26,13 +26,13 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 
 
 	public synchronized LinkedList<String> findWhereToPlaceChunks(LinkedList<Integer> chunkServerIndices, String fileName, String chunkName){
-		LinkedList<String> chunkServerNames = new LinkedList<String>();
+		LinkedList<String> chunkNames = new LinkedList<String>();
 				
 		for(Integer i: chunkServerIndices) {
 			int counter = 0;
 			for(Map.Entry<String, HashMap<String, LinkedList<String>>> m : chunkServerToStoredFiles.entrySet()) {
 				if(counter == i) {
-					chunkServerNames.add(m.getKey());
+					chunkNames.add(m.getKey());
 					//Add file name!
 					HashMap<String, LinkedList<String>> fileToChunks = chunkServerToStoredFiles.get(m.getKey());
 					LinkedList<String> chunkFileList = fileToChunks.get(fileName);
@@ -47,11 +47,11 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 			}
 		}		
 		System.out.println("List of chunkServers: ");
-		for(String s: chunkServerNames) {
+		for(String s: chunkNames) {
 			System.out.println();
 		}
 		System.out.println();
-		return chunkServerNames;
+		return chunkNames;
 		
 
 	}
