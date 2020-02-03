@@ -14,6 +14,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 			System.out.println(m.getKey());
 			System.out.flush();
 		}
+		System.out.println("Either nothing is in there or I can't get all the locks");
 	}
 	
 	
