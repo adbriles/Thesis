@@ -17,6 +17,19 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		}
 	}
 	
+	public synchronized void printRecordStructure() {
+		
+		for(Map.Entry<String, HashMap<String, LinkedList<String>>> m: chunkServerToStoredFiles.entrySet()) {
+			System.out.println();
+			for(Map.Entry<String, LinkedList<String>> fileToChunksStored: m.getValue().entrySet()) {
+				System.out.println("----" + fileToChunksStored.getKey());
+				for(String s: fileToChunksStored.getValue()) {
+					System.out.println("--------" + s);
+				}
+			}
+		}
+	}
+	
 	
 	public ControllerRecordStructure() {
 		chunkServerToStoredFiles = new HashMap<String, HashMap<String, LinkedList<String>>>();

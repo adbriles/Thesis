@@ -55,7 +55,11 @@ public class Controller {
             	if(inputSplit[0].equals("getChunkServers")) {
             		System.out.println("The chunk servers are: ");
             		EventFactory.hostToFiles.printChunkServers();
+            	} else if(inputSplit[0].equals("printAll")) {
+            		System.out.println("The structure of the system: ");
+            		EventFactory.hostToFiles.printRecordStructure();
             	}
+            	
             }
 		}
 	}
