@@ -62,6 +62,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	
 	public synchronized void addChunkServer(String name) {
 		chunkServerToStoredFiles.put(name, new HashMap<String, LinkedList<String>>());
+		System.out.println("Chunk server was added with name: " + name);
 	}
 	
 	public synchronized LinkedList<Integer> getChunkServersForStorage(){
@@ -73,7 +74,6 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 			if(!chunkServersToStore.contains(possibleChunkServer)) {
 				chunkServersToStore.add(possibleChunkServer);
 			}
-			System.out.println("Please tell me I'm stuck in here.");
 		}
 		
 		return chunkServersToStore;
