@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,6 +16,7 @@ import thesis.*;
 import java.lang.Number.*;
 import thesis.dfs.transport.*;
 import thesis.dfs.sharedClasses.*;
+import thesis.dfs.sharedClasses.EventFactory;
 
 
 
@@ -42,9 +44,19 @@ public class Controller {
 
 		
 		System.out.println("Controller Online");
-		boolean continueServerFunction = true;
-		while(continueServerFunction) {
-			
+		EventFactory eventFactory = EventFactory.getInstance();
+		boolean getUserInput = true;
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("The Controller can now recieve user input:");
+		while(getUserInput) {
+            String input = scanner.nextLine();
+            if(!input.isEmpty()){
+            	String[] inputSplit = input.split("\\s+");
+            	
+            	if(inputSplit[0].equals("getChunkServers")) {
+            		eventFactory.hostToFiles.printChunkServers();
+            	}
+            }
 		}
 	}
 	
