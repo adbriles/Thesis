@@ -1,16 +1,17 @@
 package thesis.dfs.sharedClasses;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ControllerRecordStructure {//This is built on top of concurrent structures, but some compound actions need to happen
-	private ConcurrentHashMap<String, ConcurrentHashMap<String, LinkedList<String>>> chunkServerToStoredFiles;
+	private HashMap<String, HashMap<String, LinkedList<String>>> chunkServerToStoredFiles;
 	
 	public synchronized void printChunkServers() {
 		System.out.println("If I'm getting here I'm failing to get the locks and act on the data structure.");
-		for(Map.Entry<String, ConcurrentHashMap<String, LinkedList<String>>> m : chunkServerToStoredFiles.entrySet()) {
+		for(Map.Entry<String, HashMap<String, LinkedList<String>>> m : chunkServerToStoredFiles.entrySet()) {
 			System.out.println(m.getKey() + " wtf");
 			System.out.flush();
 		}
@@ -19,7 +20,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	
 	
 	public ControllerRecordStructure() {
-		chunkServerToStoredFiles = new ConcurrentHashMap<String, ConcurrentHashMap<String, LinkedList<String>>>();
+		chunkServerToStoredFiles = new HashMap<String, HashMap<String, LinkedList<String>>>();
 	}
 
 
@@ -28,11 +29,11 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 				
 		for(Integer i: chunkServerIndices) {
 			int counter = 0;
-			for(Map.Entry<String, ConcurrentHashMap<String, LinkedList<String>>> m : chunkServerToStoredFiles.entrySet()) {
+			for(Map.Entry<String, HashMap<String, LinkedList<String>>> m : chunkServerToStoredFiles.entrySet()) {
 				if(counter == i) {
 					chunkServerNames.add(m.getKey());
 					//Add file name!
-					ConcurrentHashMap<String, LinkedList<String>> fileToChunks = chunkServerToStoredFiles.get(m.getKey());
+					HashMap<String, LinkedList<String>> fileToChunks = chunkServerToStoredFiles.get(m.getKey());
 					LinkedList<String> chunkFileList = fileToChunks.get(fileName);
 					if(chunkFileList == null) {
 						chunkServerToStoredFiles.get(m.getKey()).put(fileName, new LinkedList<String>());
@@ -60,7 +61,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	
 	
 	public synchronized void addChunkServer(String name) {
-		chunkServerToStoredFiles.put(name, new ConcurrentHashMap<String, LinkedList<String>>());
+		chunkServerToStoredFiles.put(name, new HashMap<String, LinkedList<String>>());
 	}
 	
 	public synchronized LinkedList<Integer> getChunkServersForStorage(){
