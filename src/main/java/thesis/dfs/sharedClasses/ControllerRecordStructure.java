@@ -68,7 +68,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	public synchronized LinkedList<Integer> getChunkServersForStorage(){
 		LinkedList<Integer> chunkServersToStore = new LinkedList<Integer>();
 		
-		while(chunkServersToStore.size() != 2) {//Get a list of chunk servers to store this chunk on
+		while(chunkServersToStore.size() != 3) {//Get a list of chunk servers to store this chunk on
 			Random r = new Random(System.currentTimeMillis());
 			Integer possibleChunkServer = r.nextInt(chunkServerToStoredFiles.size());
 			if(!chunkServersToStore.contains(possibleChunkServer)) {
