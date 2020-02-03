@@ -9,6 +9,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	private ConcurrentHashMap<String, ConcurrentHashMap<String, LinkedList<String>>> chunkServerToStoredFiles;
 	
 	public synchronized void printChunkServers() {
+		System.out.println("If I'm getting here I'm failing to get the locks and act on the data structure.");
 		for(Map.Entry<String, ConcurrentHashMap<String, LinkedList<String>>> m : chunkServerToStoredFiles.entrySet()) {
 			System.out.println(m.getKey());
 			System.out.flush();
