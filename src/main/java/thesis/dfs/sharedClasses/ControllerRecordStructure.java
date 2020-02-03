@@ -11,7 +11,6 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	private LinkedList<String> chunkServerNames;
 	
 	public synchronized void printChunkServers() {
-		System.out.println("What the mother fuck is going on");
 		for(String s: chunkServerNames) {
 			System.out.println(s);
 			System.out.flush();
@@ -48,7 +47,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		}		
 		System.out.println("List of chunkServers: ");
 		for(String s: chunkNames) {
-			System.out.println();
+			System.out.println(s);
 		}
 		System.out.println();
 		return chunkNames;
