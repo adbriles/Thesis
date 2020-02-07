@@ -17,6 +17,7 @@ public class Message implements Serializable{
 	private File file;
 	
 	private LinkedList<String> list;
+	private LinkedList<String> secondList;
 	
 	public Message() {
 		
@@ -96,6 +97,14 @@ public class Message implements Serializable{
 
 	public void setReadFile(boolean readFile) {
 		this.readFile = readFile;
+	}
+
+	public LinkedList<String> getSecondList() {
+		return secondList;
+	}
+
+	public void setSecondList(LinkedList<String> secondList) {
+		this.secondList = secondList;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package thesis.dfs.chunkserver;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -42,10 +43,15 @@ public class ChunkServer {
 		registerWithController();
 		
 		
+		
+		HeartBeatTimer heartBeater = new HeartBeatTimer(threadPool, ip.getHostName(), portnum, controllerHostName, controllerPort);
+		threadPool.execute(heartBeater);
+		
 		boolean continueFunction = true;
 		while(continueFunction) {
 			
 		}
+		heartBeater.killTimer();
 	}
 	
 
@@ -65,7 +71,13 @@ public class ChunkServer {
 	private static void registerWithController() {
 		try {
 			TCPSender registration = new TCPSender(createSocket(controllerHostName, controllerPort));
-			registration.sendData(new Message("ChunkServerRegistration", "", ip.getHostName(), portnum));
+			
+			//Get total Free space
+			long totalFreeSpace = new File("/").getFreeSpace();
+			
+			registration.sendData(new Message("ChunkServerRegistration", "" + Long.toString(totalFreeSpace), ip.getHostName(), portnum));
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

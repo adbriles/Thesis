@@ -28,7 +28,7 @@ public class PutRequestEvent extends Event{
 			TCPSender sender = new TCPSender(new Socket(message.getSenderHostName(), message.getSenderPort()));
 			//.eventFactory.chunkServerToStore
 			//find the nodes that can store this. Since this is a new file,
-			LinkedList<Integer> chunkServersToStore;
+			LinkedList<String> chunkServersToStore;
 			
 			System.out.println("There are this many registeredNodes: " + eventFactory.hostToFiles.getUnsafeNumberChunks());
 			System.out.flush();
@@ -42,7 +42,7 @@ public class PutRequestEvent extends Event{
 			
 			//The next line makes a call that records where a chunk will be stored.
 			System.out.println(messageSplit[0] + " " + messageSplit[1] + message.getContent());
-			Message newMessage = new Message("StoreChunkOnChunkServers", message.getContent(), eventFactory.hostToFiles.findWhereToPlaceChunks(chunkServersToStore, messageSplit[0], messageSplit[1]));
+			Message newMessage = new Message("StoreChunkOnChunkServers", message.getContent(), chunkServersToStore/*eventFactory.hostToFiles.findWhereToPlaceChunks(chunkServersToStore, messageSplit[0], messageSplit[1])*/);
 			sender.sendData(newMessage);
 			
 		} catch (IOException e) {

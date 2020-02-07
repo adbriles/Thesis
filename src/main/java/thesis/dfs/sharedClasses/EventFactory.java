@@ -53,6 +53,8 @@ public class EventFactory {
 			return new StoreAtChunkServerEvent(message);
 		} else if(message.getMessageType().equals("StoreChunk")) {
 			return new StoreChunkEvent(message);
+		} else if(message.getMessageType().contentEquals("MinorHeartBeat")) {
+			return new HandleMinorHeartBeat(message);
 		}
 		
 		return null;		
