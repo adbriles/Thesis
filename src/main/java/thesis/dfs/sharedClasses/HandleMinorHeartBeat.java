@@ -17,7 +17,9 @@ public class HandleMinorHeartBeat implements Runnable{
 		for(String s: message.getList()) {
 			EventFactory.hostToFiles.addChunk(s, s.split("_")[0], (message.getSenderHostName() + " " + message.getSenderPort()));
 		}
-		
+		for(String s: message.getSecondList()) {
+			System.out.println("Corruped chunk: " + s);
+		}
 		
 		
 		
