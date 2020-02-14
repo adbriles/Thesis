@@ -1,5 +1,6 @@
 package thesis.dfs.sharedClasses;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -39,6 +40,8 @@ public class MinorHeartBeat implements Runnable{
 		if(heartBeatMessage.getSecondList().size() != 0) {
 			System.out.println("A corrupted chunk was found.");
 		}
+		
+		heartBeatMessage.setContent(Long.toString((new File("/")).getFreeSpace()));
 		
 		try {
 			TCPSender sender = new TCPSender(new Socket(controllerHostName, controllerPort));

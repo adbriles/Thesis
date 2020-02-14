@@ -47,6 +47,8 @@ public class ChunkServer {
 		HeartBeatTimer heartBeater = new HeartBeatTimer(threadPool, ip.getHostName(), portnum, controllerHostName, controllerPort);
 		threadPool.execute(heartBeater);
 		
+		threadPool.execute(new CheckForCorruption(threadPool, ip.getHostName(), portnum, controllerHostName, controllerPort));
+		
 		boolean continueFunction = true;
 		while(continueFunction) {
 			

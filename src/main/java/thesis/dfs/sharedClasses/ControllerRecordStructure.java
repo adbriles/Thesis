@@ -6,17 +6,42 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import thesis.dfs.messages.Message;
+
 public class ControllerRecordStructure {//This is built on top of concurrent structures, but some compound actions need to happen
+	
+	//Server name mapped to a hashtable of files to their chunks
 	private HashMap<String, HashMap<String, LinkedList<String>>> chunkServerToStoredFiles;
 	private LinkedList<String> chunkServerNames;
 	private HashMap<String, Long> chunkToAvailableSpace;
 	private HashMap<String, Integer> fileToReplicationCount;
-	
+
 	public synchronized void printChunkServers() {
 		for(String s: chunkServerNames) {
 			System.out.println(s);
 			System.out.flush();
 		}
+	}
+	
+	//This is a garbage method. Should've just made another map, but I didn't want to complicate this
+	//Record structure and its maintenance any further.
+	public synchronized String findBackupChunk(Message corruptionMessage) {
+		String serverName = corruptionMessage.getSenderHostName() + " " + corruptionMessage.getSenderPort();
+		String uncorruptedServer = "";
+		for(Map.Entry<String, HashMap<String, LinkedList<String>>> m: chunkServerToStoredFiles.entrySet()) {
+			if(serverName.equals(m.getKey())) {
+				continue;
+			}
+			for(Map.Entry<String, LinkedList<String>> mm: m.getValue().entrySet()) {
+				for(String s: mm.getValue()) {
+					if(s.equals(corruptionMessage.getContent())) {
+						uncorruptedServer = m.getKey();
+					}
+				}
+			}
+			
+		}
+		return uncorruptedServer;
 	}
 	
 	public synchronized void printRecordStructure() {
@@ -107,6 +132,10 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		chunkServerToStoredFiles.put(name, new HashMap<String, LinkedList<String>>());
 		chunkToAvailableSpace.put(name, availableSpace);
 		chunkServerNames.add(name);
+	}
+	
+	public synchronized void updateChunksSpace(String name, long availableSpace) {
+		chunkToAvailableSpace.put(name, availableSpace);
 	}
 	
 	public synchronized LinkedList<String> getChunkServersForStorage(){

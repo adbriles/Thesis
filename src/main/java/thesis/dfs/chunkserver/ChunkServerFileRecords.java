@@ -97,12 +97,14 @@ public class ChunkServerFileRecords {
 		
 		
 	}
+	
 	//Data structure that maps a chunkname to a class that contains integrity information about a chunk
 	//This is a class just so I can synchronsize access to the internal datastructures. 
 	private Map<String, FileInformation> fileToInformation;
 	
 	private LinkedList<String> filesAddedSinceLastHeartBeat;
 	
+
 	public synchronized LinkedList<String> getCorruptedList(){
 		LinkedList<String> corruptedChunks = new LinkedList<String>();
 		for(Map.Entry<String, FileInformation> m: fileToInformation.entrySet()) {
@@ -112,6 +114,7 @@ public class ChunkServerFileRecords {
 		}
 		return corruptedChunks;
 	}
+	
 	
 
 	public ChunkServerFileRecords() {
