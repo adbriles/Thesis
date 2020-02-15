@@ -15,6 +15,8 @@ public class FixCorruptedChunkEvent implements Runnable {
 		// TODO Auto-generated method stub
 		String goodChunkLocation = EventFactory.getInstance().hostToFiles.findBackupChunk(message);
 		
+		System.out.println("Requesting this chunk server to forward a good chunk: " + goodChunkLocation);
+		
 		Message fixCorruptionMessage = new Message("FixCorruption");
 		fixCorruptionMessage.setContent(message.getContent() + goodChunkLocation);
 	}
