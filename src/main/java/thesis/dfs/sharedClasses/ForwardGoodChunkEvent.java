@@ -33,6 +33,8 @@ public class ForwardGoodChunkEvent implements Runnable{
 			Message storeChunk = new Message("StoreChunk", chunkNameParts[0] + messageSplit[0], new LinkedList<String>());
 			storeChunk.setReadFile(true);
 			//sender.sendData(storeChunk);
+			System.out.println("The message content is: " + message.getContent());
+			
 			sender.sendFile(new File(message.getContent().split("\\s+")[1]), storeChunk);
 			
 		} catch(IOException e) {
