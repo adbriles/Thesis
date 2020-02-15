@@ -24,7 +24,7 @@ public class FixCorruptedChunkEvent implements Runnable {
 		System.out.println("Requesting this chunk server to forward a good chunk: " + goodChunkLocation);
 		
 		Message fixCorruptionMessage = new Message("FixCorruption");
-		fixCorruptionMessage.setContent(message.getContent() + " " + goodChunkLocation);
+		fixCorruptionMessage.setContent(message.getContent() + " " + message.getSenderHostName() + " " + message.getSenderPort());
 		
 		try {
 			TCPSender sender = new TCPSender(new Socket(hostInformationSplit[0], Integer.parseInt(hostInformationSplit[1])));
