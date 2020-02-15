@@ -22,6 +22,7 @@ public class ForwardGoodChunkEvent implements Runnable{
 		// TODO Auto-generated method stub
 		EventFactory eventFactory = EventFactory.getInstance();
 		System.out.println("Sending over a good chunk.");
+		System.out.println(message.getContent());
 		//file to send, host name, host port
 		String[] messageSplit = message.getContent().split(" ");
 
