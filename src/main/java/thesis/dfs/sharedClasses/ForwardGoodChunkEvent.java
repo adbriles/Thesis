@@ -30,7 +30,7 @@ public class ForwardGoodChunkEvent implements Runnable{
 		
 		try {
 			TCPSender sender = new TCPSender(new Socket(messageSplit[1], Integer.parseInt(messageSplit[2])));
-			Message storeChunk = new Message("StoreChunk", chunkNameParts[0] + messageSplit[0], new LinkedList<String>());
+			Message storeChunk = new Message("StoreChunk", chunkNameParts[0] + " " + messageSplit[0], new LinkedList<String>());
 			storeChunk.setReadFile(true);
 			//sender.sendData(storeChunk);
 			System.out.println("The message content is: " + message.getContent());
