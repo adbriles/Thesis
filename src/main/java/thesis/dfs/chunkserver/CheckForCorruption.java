@@ -11,7 +11,7 @@ import thesis.dfs.messages.Message;
 import thesis.dfs.sharedClasses.EventFactory;
 import thesis.dfs.sharedClasses.MajorHeartBeat;
 import thesis.dfs.sharedClasses.MinorHeartBeat;
-import thesis.dfs.sharedClasses.ScanChunksForCorruption;
+
 import thesis.dfs.transport.TCPSender;
 
 public class CheckForCorruption implements Runnable{

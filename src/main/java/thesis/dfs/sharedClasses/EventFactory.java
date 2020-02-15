@@ -57,6 +57,8 @@ public class EventFactory {
 			return new HandleMinorHeartBeat(message);
 		} else if(message.getMessageType().equals("CorruptedFileDetected")) {
 			return new FixCorruptedChunkEvent(message);
+		} else if(message.getMessageType().equals("FixCorruption")) {
+			return new ForwardGoodChunkEvent(message);
 		}
 		
 		return null;		

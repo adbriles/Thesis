@@ -13,7 +13,10 @@ public class FixCorruptedChunkEvent implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		System.out.println("Go to this chunk to find a replacement: " + EventFactory.getInstance().hostToFiles.findBackupChunk(message));
+		String goodChunkLocation = EventFactory.getInstance().hostToFiles.findBackupChunk(message);
+		
+		Message fixCorruptionMessage = new Message("FixCorruption");
+		fixCorruptionMessage.setContent(message.getContent() + goodChunkLocation);
 	}
 
 }
