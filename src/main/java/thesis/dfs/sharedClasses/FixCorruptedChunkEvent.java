@@ -28,7 +28,7 @@ public class FixCorruptedChunkEvent implements Runnable {
 		
 		try {
 			TCPSender sender = new TCPSender(new Socket(hostInformationSplit[0], Integer.parseInt(hostInformationSplit[1])));
-			sender.sendData(message);
+			sender.sendData(fixCorruptionMessage);
 			
 		} catch(IOException e) {
 			e.printStackTrace();
