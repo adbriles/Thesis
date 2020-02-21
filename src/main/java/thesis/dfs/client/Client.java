@@ -41,6 +41,7 @@ import thesis.dfs.sharedClasses.*;
 //to test   get C:\Users\adambriles1216\eclipse-workspace\Thesis\TestOutput\TestWrite.txt
 
 //to test with linux	put /s/bach/d/under/adbriles/Thesis/TestFiles/TestWrite.txt
+//						get /s/bach/d/under/adbriles/Thesis/TestFiles/TestWrite.txt
 public class Client {
 	private static boolean isWindows = false;
 	
@@ -98,6 +99,10 @@ public class Client {
 		try {
 			TCPSender sender = new TCPSender(createSocket(controllerHostName, controllerPort));
 			String messageContent = fileName;
+			if(!isWindows) {
+				messageContent = "/tmp" + fileName;
+			}
+			
 			sender.sendData(new Message("GetRequest", messageContent, ip.getHostName(), portnum));
 		} catch (IOException e){
 			e.printStackTrace();
