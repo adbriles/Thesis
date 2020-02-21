@@ -42,7 +42,7 @@ import thesis.dfs.sharedClasses.*;
 
 //to test with linux	put /s/bach/d/under/adbriles/Thesis/TestFiles/TestWrite.txt
 public class Client {
-	private static boolean isWindows = true;
+	private static boolean isWindows = false;
 	
 	
 	private static Integer portnum;
