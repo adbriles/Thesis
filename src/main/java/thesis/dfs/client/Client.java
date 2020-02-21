@@ -45,6 +45,7 @@ public class Client {
 	private static boolean isWindows = false;
 	
 	
+	
 	private static Integer portnum;
 	private static EventFactory eventFactory;
 	private static Socket controllerSocket;
