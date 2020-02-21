@@ -8,8 +8,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.math3.util.Pair;
-
 import thesis.dfs.messages.Message;
 
 public class ControllerRecordStructure {//This is built on top of concurrent structures, but some compound actions need to happen
@@ -120,8 +118,8 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		
 	}
 	
-	public synchronized LinkedList<Pair<String, String>> getChunkLocations(String fileName) {
-		LinkedList<Pair<String, String>> chunksWithServer = new LinkedList<Pair<String, String>>();
+	public synchronized LinkedList<PairStrings> getChunkLocations(String fileName) {
+		LinkedList<PairStrings> chunksWithServer = new LinkedList<>();
 		
 		//If file doesn't exist send back that the file doesn't exist.
 		if( !fileToAllChunks.containsKey(fileName)) {
@@ -136,7 +134,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 			int indexOfServer = randomGenerator.nextInt(chunkServerList.size());
 			String chunkServerToRequestFrom = chunkServerList.get(indexOfServer);
 			//chunk name to server to get it
-			chunksWithServer.add(new Pair<String, String>(s, chunkServerToRequestFrom));
+			chunksWithServer.add(new PairStrings(s, chunkServerToRequestFrom));
 		}
 		
 		return chunksWithServer;

@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 
-import org.apache.commons.math3.util.Pair;
 
 import thesis.dfs.messages.Message;
 import thesis.dfs.transport.TCPSender;
@@ -49,7 +48,7 @@ public class GetRequestEvent implements Runnable{
 		//Send the list to the client so it can request the chunks from chunkServers
 		//Any other way seems like it would be beyond a pain. 
 		LinkedList<String> fileAndHosts = new LinkedList<String>();
-		for(Pair<String, String> p: EventFactory.hostToFiles.getChunkLocations(message.getContent())) {
+		for(PairStrings p: EventFactory.hostToFiles.getChunkLocations(message.getContent())) {
 			String fileAndHost = p.getValue() + " " + p.getKey();
 			fileAndHosts.add(fileAndHost);
 		}
