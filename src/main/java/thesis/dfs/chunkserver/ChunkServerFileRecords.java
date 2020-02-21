@@ -35,7 +35,7 @@ public class ChunkServerFileRecords {
 				while((bytesAmount = bufferedIn.read(buffer, 0, buffer.length)) != -1) {
 					//Compute hash of the read in buffer and add it to the file Hashes structure.
 					fileHashes.add(java.util.Arrays.hashCode(buffer));
-					System.out.println(java.util.Arrays.hashCode(buffer));
+					//System.out.println(java.util.Arrays.hashCode(buffer));
 				}
 				fileIn.close();
 				bufferedIn.close();
@@ -63,7 +63,7 @@ public class ChunkServerFileRecords {
 				int sizeOfSegments = 1024 * 8;
 				byte[] buffer = new byte[sizeOfSegments];
 				
-				System.out.println("Tested hashes Below: ");
+				//System.out.println("Tested hashes Below: ");
 				while((bytesAmount = bufferedIn.read(buffer, 0, buffer.length)) != -1) {
 					//Compute hash of the read in buffer and add it to the file Hashes structure.
 					currentHashes.add(java.util.Arrays.hashCode(buffer));

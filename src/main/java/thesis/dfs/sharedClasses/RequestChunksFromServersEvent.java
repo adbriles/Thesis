@@ -14,7 +14,7 @@ public class RequestChunksFromServersEvent implements Runnable{
 	
 	public RequestChunksFromServersEvent(Message message) {
 		this.message = message;
-		System.out.println(message.getContent());
+		//System.out.println(message.getContent());
 		
 		
 	}

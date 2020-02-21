@@ -22,8 +22,7 @@ public class ChunkRegistrationEvent extends Event{
 			TCPSender sender = new TCPSender(new Socket(message.getSenderHostName(), message.getSenderPort()));
 			
 			long chunksSpace = Long.parseLong(message.getContent());
-			System.out.println("The chunk is reporting space of: ");
-			
+
 			String serverName = message.getSenderHostName() + " " + message.getSenderPort();
 			eventFactory.hostToFiles.addChunkServer(serverName, chunksSpace);
 			Message responseMessage = new Message("RegistrationConfirmation");

@@ -88,7 +88,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	
 	//adding a chunk will happen at heartbeat responses.
 	public synchronized void addChunk(String chunkName, String fileName, String chunkServerName) {
-		System.out.println(chunkServerName);
+		//System.out.println(chunkServerName);
 		if(!chunkServerToStoredFiles.get(chunkServerName).containsKey(fileName)) {
 			chunkServerToStoredFiles.get(chunkServerName).put(fileName, new LinkedList<String>());
 		}
@@ -152,6 +152,8 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 			}
 		}
 		
+		System.out.println();
+		
 		System.out.println("Chunk file to all servers storing it: ");		
 		for(Map.Entry<String, LinkedList<String>> m: chunkFileToServersStoring.entrySet()) {
 			System.out.println("name of chunk file: " + m.getKey());
@@ -163,39 +165,6 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	}
 	
 	
-
-	/*public synchronized LinkedList<String> findWhereToPlaceChunks(LinkedList<Integer> chunkServerIndices, String fileName, String chunkName){
-		LinkedList<String> chunkNames = new LinkedList<String>();
-				
-		for(Integer i: chunkServerIndices) {
-			int counter = 0;
-			for(Map.Entry<String, HashMap<String, LinkedList<String>>> m : chunkServerToStoredFiles.entrySet()) {
-				if(counter == i) {
-					chunkNames.add(m.getKey());
-					//Add file name!
-					HashMap<String, LinkedList<String>> fileToChunks = chunkServerToStoredFiles.get(m.getKey());
-					LinkedList<String> chunkFileList = fileToChunks.get(fileName);
-					if(chunkFileList == null) {
-						chunkServerToStoredFiles.get(m.getKey()).put(fileName, new LinkedList<String>());
-					}
-					chunkServerToStoredFiles.get(m.getKey()).get(fileName).add(chunkName);	
-
-					break;
-				}
-				counter++;
-			}
-		}	
-		
-		System.out.println("List of chunkServers: ");
-		for(String s: chunkNames) {
-			System.out.println(s);
-		}
-		System.out.println();
-		
-		return chunkNames;
-		
-
-	}*/
 	public int getUnsafeNumberChunks() {
 		return chunkServerToStoredFiles.size();
 	}

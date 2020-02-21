@@ -12,7 +12,7 @@ public class HandleMinorHeartBeat implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		System.out.println("Handling a heartbeat");
+		//System.out.println("Handling a heartbeat");
 		
 		for(String s: message.getList()) {
 			EventFactory.hostToFiles.addChunk(s, s.split("_")[0], (message.getSenderHostName() + " " + message.getSenderPort()));

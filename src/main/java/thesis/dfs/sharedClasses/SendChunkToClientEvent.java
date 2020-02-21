@@ -20,7 +20,7 @@ public class SendChunkToClientEvent implements Runnable{
 	public void run() {
 		// TODO Auto-generated method stub
 		EventFactory eventFactory = EventFactory.getInstance();
-		System.out.println(message.getContent());
+		//System.out.println(message.getContent());
 		//file to send, host name, host port
 
 		try {
@@ -32,7 +32,7 @@ public class SendChunkToClientEvent implements Runnable{
 			storeChunk.setReadFile(true);
 			storeChunk.setReplacementChunk(true);
 			//sender.sendData(storeChunk);
-			System.out.println("The message content is: " + message.getContent());
+			//System.out.println("The message content is: " + message.getContent());
 			
 			sender.sendFile(new File(message.getContent()), storeChunk);
 			
