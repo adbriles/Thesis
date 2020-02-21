@@ -7,7 +7,7 @@ import java.util.LinkedList;
 public class Message implements Serializable{
 	private String senderHostName;
 	private int senderPort;
-	
+	private boolean isReplacementChunk = false;
 	private String messageType;
 	private String content;
 	
@@ -105,6 +105,14 @@ public class Message implements Serializable{
 
 	public void setSecondList(LinkedList<String> secondList) {
 		this.secondList = secondList;
+	}
+
+	public boolean isReplacementChunk() {
+		return isReplacementChunk;
+	}
+
+	public void setReplacementChunk(boolean isReplacementChunk) {
+		this.isReplacementChunk = isReplacementChunk;
 	}
 	
 }

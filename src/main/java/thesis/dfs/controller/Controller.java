@@ -58,6 +58,8 @@ public class Controller {
             	} else if(inputSplit[0].equals("printAll")) {
             		System.out.println("The structure of the system: ");
             		EventFactory.hostToFiles.printRecordStructure();
+            	} else if(inputSplit[0].equals("printAllMaps")) {
+            		EventFactory.hostToFiles.printAllMaps();
             	}
             	
             }

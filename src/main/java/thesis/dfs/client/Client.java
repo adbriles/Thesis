@@ -28,7 +28,7 @@ import thesis.*;
 
 import java.lang.Number.*;
 import thesis.dfs.transport.*;
-import thesis.dfs.controller.EventFactory;
+import thesis.dfs.sharedClasses.EventFactory;
 import thesis.dfs.messages.Message;
 import thesis.dfs.sharedClasses.*;
 
@@ -38,10 +38,11 @@ import thesis.dfs.sharedClasses.*;
 
 
 //to test 	put C:\Users\adambriles1216\eclipse-workspace\Thesis\TestOutput\TestWrite.txt
+//to test   get C:\Users\adambriles1216\eclipse-workspace\Thesis\TestOutput\TestWrite.txt
 
 //to test with linux	put /s/bach/d/under/adbriles/Thesis/TestFiles/TestWrite.txt
 public class Client {
-	private static boolean isWindows = false;
+	private static boolean isWindows = true;
 	
 	
 	private static Integer portnum;
@@ -63,6 +64,8 @@ public class Client {
 		controllerPort = Integer.parseInt(args[1]);
 		//Setup a port for communication with the controller
 		//setControllerSocket(args[0], Integer.parseInt(args[1]));
+		EventFactory.setClientPort(portnum);
+		
 		
 		ExecutorService threadPool = Executors.newCachedThreadPool();
 		
@@ -83,10 +86,23 @@ public class Client {
             	if(inputSplit[0].equals("put") && inputSplit.length == 2) {
             		System.out.println("Sending request to store the file.");
             		executePut(inputSplit[1]);
+            	} else if(inputSplit[0].equals("get") && inputSplit.length == 2) {
+            		System.out.println("Getting file: " + inputSplit[1]);
+            		executeGet(inputSplit[1]);
             	}
             }
 		}
 	}
+	private static void executeGet(String fileName) {
+		try {
+			TCPSender sender = new TCPSender(createSocket(controllerHostName, controllerPort));
+			String messageContent = fileName;
+			sender.sendData(new Message("GetRequest", messageContent, ip.getHostName(), portnum));
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+	
 	//Split the file before sending. All part files stored under tmp.
 	private static void executePut(String fileName) throws FileNotFoundException, IOException {
 		LinkedList<String> chunkNamesAndMetadata = splitFile(fileName);

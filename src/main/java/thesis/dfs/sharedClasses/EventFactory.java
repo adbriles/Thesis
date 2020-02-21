@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import thesis.dfs.chunkserver.ChunkServerFileRecords;
+import thesis.dfs.client.ClientRetrievals;
 import thesis.dfs.messages.Message;
 
 public class EventFactory {
@@ -17,10 +18,24 @@ public class EventFactory {
 	
 	public static ChunkServerFileRecords chunkRecords;
 	
+	public static ClientRetrievals clientGets;
+	
+	private static int clientPort;
+	//client methods to make sure certain threads have access to the port number
+	public static void setClientPort(int port) {
+		clientPort = port;
+	}
+	public static int getClientPort() {
+		return clientPort;
+	}
+	
+	
+	
 	
 	private EventFactory() {
 		hostToFiles = new ControllerRecordStructure();
 		chunkRecords = new ChunkServerFileRecords();
+		clientGets = new ClientRetrievals();
 	}
 	
 	//Thread safe singleton get instance
@@ -59,6 +74,14 @@ public class EventFactory {
 			return new FixCorruptedChunkEvent(message);
 		} else if(message.getMessageType().equals("FixCorruption")) {
 			return new ForwardGoodChunkEvent(message);
+		} else if(message.getMessageType().equals("GetRequest")) {
+			return new GetRequestEvent(message);
+		} else if(message.getMessageType().equals("RequestChunksFromServers")) {
+			return new RequestChunksFromServersEvent(message);
+		} else if(message.getMessageType().equals("SendChunkToClient")) {
+			return new SendChunkToClientEvent(message);
+		} else if(message.getMessageType().equals("GetFileFromChunkServer")) {
+			return new GetFileFromChunkServerEvent(message);
 		}
 		
 		return null;		

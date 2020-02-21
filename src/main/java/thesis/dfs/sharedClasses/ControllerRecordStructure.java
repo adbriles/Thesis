@@ -1,10 +1,14 @@
 package thesis.dfs.sharedClasses;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.math3.util.Pair;
 
 import thesis.dfs.messages.Message;
 
@@ -15,12 +19,22 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	private LinkedList<String> chunkServerNames;
 	private HashMap<String, Long> chunkToAvailableSpace;
 	private HashMap<String, Integer> fileToReplicationCount;
-
+	
+	//This data structure is using a set to make sure I'm not constantly adding redundant chunks
+	//I can't really be sure a chunk server has a file unless they tell the controller
+	private HashMap<String, HashSet<String>> fileToAllChunks; 
+	private HashMap<String, LinkedList<String>> chunkFileToServersStoring;
+	
 	public synchronized void printChunkServers() {
 		for(String s: chunkServerNames) {
 			System.out.println(s);
 			System.out.flush();
 		}
+	}
+	
+	public synchronized void decrementReplicationCount(String chunkFileName) {
+		Integer currentCount =  fileToReplicationCount.get(chunkFileName);
+		fileToReplicationCount.put(chunkFileName, (currentCount - 1));
 	}
 	
 	//This is a garbage method. Should've just made another map, but I didn't want to complicate this
@@ -63,6 +77,8 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		chunkServerNames = new LinkedList<String>();
 		chunkToAvailableSpace = new HashMap<String, Long>();
 		fileToReplicationCount = new HashMap<String, Integer>();
+		fileToAllChunks = new HashMap<String, HashSet<String>>();
+		chunkFileToServersStoring = new HashMap<String, LinkedList<String>>();
 	}
 	//Adding a file will happen on a put request
 	//Add a file to the replication count, but actually add the file to the structure on an add chunk call
@@ -85,12 +101,70 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 			int originalVal = fileToReplicationCount.get(chunkName);
 			fileToReplicationCount.put(chunkName, originalVal + 1);
 		}
+		
+		
+		if(!fileToAllChunks.containsKey(fileName)) {
+			fileToAllChunks.put(fileName, new HashSet<String>());
+		} 
+		fileToAllChunks.get(fileName).add(chunkName);
+		
+		
+		if(!chunkFileToServersStoring.containsKey(chunkName)) {
+			chunkFileToServersStoring.put(chunkName, new LinkedList<String>());
+		}
+		chunkFileToServersStoring.get(chunkName).add(chunkServerName);
+		
+		
 		System.out.println("The total replication count is: " + fileToReplicationCount.get(chunkName));
 		
 		
 	}
+	
+	public synchronized LinkedList<Pair<String, String>> getChunkLocations(String fileName) {
+		LinkedList<Pair<String, String>> chunksWithServer = new LinkedList<Pair<String, String>>();
+		
+		//If file doesn't exist send back that the file doesn't exist.
+		if( !fileToAllChunks.containsKey(fileName)) {
+			return chunksWithServer;
+		}
+		//Use a random number generator to make sure one chunk server doesn't get every request for a chunk.
+		//It's a little janky, but I don't see why it's not a good solution.
+		Random randomGenerator = new Random();
+		HashSet<String> fileChunks = fileToAllChunks.get(fileName);
+		for(String s: fileChunks) {
+			LinkedList<String> chunkServerList = chunkFileToServersStoring.get(s);
+			int indexOfServer = randomGenerator.nextInt(chunkServerList.size());
+			String chunkServerToRequestFrom = chunkServerList.get(indexOfServer);
+			//chunk name to server to get it
+			chunksWithServer.add(new Pair<String, String>(s, chunkServerToRequestFrom));
+		}
+		
+		return chunksWithServer;
+		
+	}
+	
+	public synchronized void printAllMaps() {
+		System.out.println("File to all chunks it contains: ");		
+		for(Map.Entry<String, HashSet<String>> m: fileToAllChunks.entrySet()) {
+			System.out.println("The file is: " + m.getKey());
+			for(String s: m.getValue()) {
+				System.out.println();
+			}
+		}
+		
+		System.out.println("Chunk file to all servers storing it: ");		
+		for(Map.Entry<String, LinkedList<String>> m: chunkFileToServersStoring.entrySet()) {
+			System.out.println("name of chunk file: " + m.getKey());
+			for(String s: m.getValue()) {
+				System.out.println(s);
+			}
+		}
+		
+	}
+	
+	
 
-	public synchronized LinkedList<String> findWhereToPlaceChunks(LinkedList<Integer> chunkServerIndices, String fileName, String chunkName){
+	/*public synchronized LinkedList<String> findWhereToPlaceChunks(LinkedList<Integer> chunkServerIndices, String fileName, String chunkName){
 		LinkedList<String> chunkNames = new LinkedList<String>();
 				
 		for(Integer i: chunkServerIndices) {
@@ -121,7 +195,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		return chunkNames;
 		
 
-	}
+	}*/
 	public int getUnsafeNumberChunks() {
 		return chunkServerToStoredFiles.size();
 	}

@@ -39,7 +39,10 @@ public class StoreChunkEvent implements Runnable{
 			
 		
 		}
-		eventFactory.chunkRecords.addChunkFile(message.getContent().split("\\s+")[1]);
+		//If the sent file isn't a replacement for a corrupted chunk, then update records
+		if(!message.isReplacementChunk()) {
+			eventFactory.chunkRecords.addChunkFile(message.getContent().split("\\s+")[1]);
+		}
 	}
 
 }

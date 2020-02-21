@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import thesis.dfs.controller.EventFactory;
+import thesis.dfs.sharedClasses.EventFactory;
 import thesis.dfs.messages.Message;
 import thesis.dfs.transport.TCPSender;
 import thesis.dfs.transport.TCPServerThread;
