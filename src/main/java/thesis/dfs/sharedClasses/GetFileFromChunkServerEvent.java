@@ -1,9 +1,14 @@
 package thesis.dfs.sharedClasses;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -46,24 +51,33 @@ public class GetFileFromChunkServerEvent implements Runnable{
 		String[] inOrderChunks = new String[chunkNames.size()];
 		
 
-		PrintWriter pw = new PrintWriter(fileName);
-
-		
+		//Order the chunks properly
 		for(String chunkName: chunkNames) {
 			int chunkNumber = Integer.parseInt(chunkName.split("_chunk")[1]) - 1;
 			inOrderChunks[chunkNumber] = chunkName;
-			File f = new File(chunkName);
-			
-			BufferedReader br = new BufferedReader(new FileReader(chunkName));
-			String line = br.readLine();
-			while(line != null) {
-				pw.println(line);
-				line = br.readLine();
-			}
-			pw.flush();
-         
-			
+
 		}
+		
+
+		FileOutputStream writer = new FileOutputStream(new File(fileName), true);		
+		int sizeOfFiles = 1024 * 64;
+		byte[] buffer = new byte[sizeOfFiles];
+		
+		for(String chunk: inOrderChunks) {
+			try(FileInputStream fileIn = new FileInputStream(chunk);
+					BufferedInputStream bufferedIn = new BufferedInputStream(fileIn);) {
+					
+					Integer bytesAmount = 0;
+					int sequenceNumber = 0;
+					while(( bytesAmount = bufferedIn.read(buffer)) > 0) {
+						
+						writer.write(buffer);
+					}
+					
+				} 
+		}
+		
+		writer.close();
 		System.out.println("Finished getting the file: " + fileName);
 	}
 	
