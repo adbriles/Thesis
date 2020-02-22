@@ -60,10 +60,11 @@ public class GetFileFromChunkServerEvent implements Runnable{
 		
 
 		FileOutputStream writer = new FileOutputStream(new File(fileName), true);		
-		int sizeOfFiles = 1024 * 64;
-		byte[] buffer = new byte[sizeOfFiles];
-		
+
 		for(String chunk: inOrderChunks) {
+			System.out.println("Getting ready to append the chunk: " + chunk);
+			int sizeOfFiles = 1024 * 64;
+			byte[] buffer = new byte[sizeOfFiles];			
 			try(FileInputStream fileIn = new FileInputStream(chunk);
 					BufferedInputStream bufferedIn = new BufferedInputStream(fileIn);) {
 					
@@ -75,7 +76,6 @@ public class GetFileFromChunkServerEvent implements Runnable{
 					}
 					
 				} 
-			buffer = new byte[sizeOfFiles];
 		}
 		
 		writer.close();
