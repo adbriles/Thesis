@@ -71,8 +71,13 @@ public class GetFileFromChunkServerEvent implements Runnable{
 					Integer bytesAmount = 0;
 					int sequenceNumber = 0;
 					
-					int i = bytesAmount = bufferedIn.read(buffer);
-					System.out.println("The buffer read in: " + i);	
+					int amountRead = bufferedIn.read(buffer);
+					System.out.println("The buffer read in: " + amountRead);	
+					if(amountRead != 1024 * 64) {
+						byte[] actuallyRead = new byte[amountRead];
+						System.arraycopy(buffer, 0, actuallyRead,0, amountRead);
+						buffer = actuallyRead;
+					}
 					writer.write(buffer);
 					
 					
