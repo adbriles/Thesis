@@ -20,7 +20,7 @@ public class ClientRetrievals {
 		public boolean decrementChunksLeft(String newlyRetrievedChunk) {
 			boolean isNoneLeft = false;
 			numberChunksLeft = numberChunksLeft - 1;
-			System.out.println("The number of chunks left is: " + numberChunksLeft);
+			//System.out.println("The number of chunks left is: " + numberChunksLeft);
 			if(numberChunksLeft == 0) {
 				isNoneLeft = true;
 			}
