@@ -64,7 +64,7 @@ public class GetFileFromChunkServerEvent implements Runnable{
          
 			
 		}
-
+		System.out.println("Finished getting the file: " + fileName);
 	}
 	
 
