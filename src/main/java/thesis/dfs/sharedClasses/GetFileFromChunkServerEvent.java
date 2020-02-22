@@ -57,7 +57,7 @@ public class GetFileFromChunkServerEvent implements Runnable{
 			BufferedReader br = new BufferedReader(new FileReader(chunkName));
 			String line = br.readLine();
 			while(line != null) {
-				pw.println();
+				pw.println(line);
 				line = br.readLine();
 			}
 			pw.flush();
