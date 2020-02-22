@@ -75,6 +75,7 @@ public class GetFileFromChunkServerEvent implements Runnable{
 					}
 					
 				} 
+			buffer = new byte[sizeOfFiles];
 		}
 		
 		writer.close();
