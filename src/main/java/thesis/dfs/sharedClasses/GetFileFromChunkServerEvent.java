@@ -31,7 +31,7 @@ public class GetFileFromChunkServerEvent implements Runnable{
 	private void stitchBackTogethor(LinkedList<String> chunkNames) {
 		String[] inOrderChunks = new String[chunkNames.size()];
 		for(String s: chunkNames) {
-			int chunkNumber = Integer.parseInt(s.split("_chunk")[1]);
+			int chunkNumber = Integer.parseInt(s.split("_chunk")[1]) - 1;
 			inOrderChunks[chunkNumber] = s;
 		}
 		for(String s: inOrderChunks) {
