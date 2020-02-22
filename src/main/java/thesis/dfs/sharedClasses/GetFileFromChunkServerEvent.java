@@ -70,10 +70,11 @@ public class GetFileFromChunkServerEvent implements Runnable{
 					
 					Integer bytesAmount = 0;
 					int sequenceNumber = 0;
-					while(( bytesAmount = bufferedIn.read(buffer)) > 0) {
-						
-						writer.write(buffer);
-					}
+					
+					int i = bytesAmount = bufferedIn.read(buffer);
+					System.out.println("The buffer read in: " + i);	
+					writer.write(buffer);
+					
 					
 				} 
 		}
