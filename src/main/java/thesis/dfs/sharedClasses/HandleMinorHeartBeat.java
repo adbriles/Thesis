@@ -20,17 +20,6 @@ public class HandleMinorHeartBeat implements Runnable{
 		
 		EventFactory.hostToFiles.updateChunksSpace((message.getSenderHostName() + " " + message.getSenderPort()), Long.parseLong(message.getContent()));
 		
-		
-		/*for(String s: message.getSecondList()) {
-			System.out.println("Corruped chunk: " + s);
-		}
-		
-		
-		
-		for(String s: message.getList()) {
-			System.out.println("Adding" + s);
-		}*/
-		
 	}
 
 	

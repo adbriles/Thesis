@@ -35,11 +35,6 @@ public class MinorHeartBeat implements Runnable{
 		heartBeatMessage.setSenderPort(portnum.intValue());
 		
 		heartBeatMessage.setList(EventFactory.chunkRecords.getRecentlyAddedChunks());
-		heartBeatMessage.setSecondList(EventFactory.chunkRecords.getCorruptedList());
-		
-		if(heartBeatMessage.getSecondList().size() != 0) {
-			System.out.println("A corrupted chunk was found.");
-		}
 		
 		heartBeatMessage.setContent(Long.toString((new File("/")).getFreeSpace()));
 		

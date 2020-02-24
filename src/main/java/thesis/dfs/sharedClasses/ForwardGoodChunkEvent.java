@@ -35,7 +35,8 @@ public class ForwardGoodChunkEvent implements Runnable{
 			storeChunk.setReplacementChunk(true);
 			//sender.sendData(storeChunk);
 			//System.out.println("The message content is: " + message.getContent());
-			
+			storeChunk.setAlterMetadata(true);
+			storeChunk.setCreateMetadata(false);
 			sender.sendFile(new File(message.getContent().split("\\s+")[0]), storeChunk);
 			
 		} catch(IOException e) {

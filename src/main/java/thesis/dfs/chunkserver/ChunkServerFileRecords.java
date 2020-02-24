@@ -50,6 +50,7 @@ public class ChunkServerFileRecords {
 		}
 		
 		
+		
 		public boolean isCorrupted() {
 			//Read in file, and 
 			LinkedList<Integer> currentHashes = new LinkedList<Integer>();
@@ -104,7 +105,16 @@ public class ChunkServerFileRecords {
 	
 	private LinkedList<String> filesAddedSinceLastHeartBeat;
 	
-
+	public synchronized LinkedList<String> getMajorHeartBeatInformation() {
+		//returning a string of format: chunkName space left
+		LinkedList<String> allChunks = new LinkedList<String>();
+		for(Map.Entry<String, FileInformation> m: fileToInformation.entrySet()) {
+			allChunks.add(m.getKey());
+		}
+		return allChunks;
+	}
+	
+	
 	public synchronized LinkedList<String> getCorruptedList(){
 		LinkedList<String> corruptedChunks = new LinkedList<String>();
 		for(Map.Entry<String, FileInformation> m: fileToInformation.entrySet()) {
@@ -127,7 +137,7 @@ public class ChunkServerFileRecords {
 		filesAddedSinceLastHeartBeat.add(chunkName);
 	}
 	
-	//Resets the newly added chunks
+	//Resets the newly added chunks after returning what has been added
 	public synchronized LinkedList<String> getRecentlyAddedChunks(){
 		LinkedList<String> copy = new LinkedList<String>(filesAddedSinceLastHeartBeat);
 		filesAddedSinceLastHeartBeat = new LinkedList<String>();

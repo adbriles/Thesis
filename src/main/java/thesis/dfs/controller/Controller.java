@@ -2,9 +2,11 @@ package thesis.dfs.controller;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -23,11 +25,17 @@ import thesis.dfs.sharedClasses.EventFactory;
 public class Controller {
 	private static Integer portnum;
 	private static EventFactory eventFactory;
-	
+	private static String hostName;
 	
 	public static void main(String[] args) {
 		portnum = Integer.parseInt(args[0]);
 		eventFactory = EventFactory.getInstance();//make sure my singleton instance starts here
+		try {
+			hostName = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//The use of java ExecutorService is mostly just for ease of use. 
 		//I'm not too worried about too many threads constantly being created, because
@@ -42,6 +50,8 @@ public class Controller {
 		Thread serverThread = new Thread(server);
 		serverThread.start();
 
+		threadPool.execute(new CheckServers(hostName, portnum));
+		
 		
 		System.out.println("Controller Online");
 		boolean getUserInput = true;
@@ -66,10 +76,5 @@ public class Controller {
 		}
 	}
 	
-	private static Integer findOpenPort() throws IOException {
-		try (ServerSocket socket = new ServerSocket(0);){
-			return socket.getLocalPort();
-		}
-	}
 
 }

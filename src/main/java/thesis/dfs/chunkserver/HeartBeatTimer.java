@@ -41,7 +41,7 @@ public class HeartBeatTimer implements Runnable{
 			if(minorHeartBeatCount > 8) {
 				//System.out.println("A major heartBeat occured");
 				minorHeartBeatCount = 0;
-				threadPool.execute(new MajorHeartBeat());
+				threadPool.execute(new MinorHeartBeat(hostName, portnum, controllerName, controllerPort));
 			} else {
 				//System.out.println("A minor heartbeat occured.");
 				threadPool.execute(new MinorHeartBeat(hostName, portnum, controllerName, controllerPort));

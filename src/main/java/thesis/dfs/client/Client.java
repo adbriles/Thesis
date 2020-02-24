@@ -43,7 +43,7 @@ import thesis.dfs.sharedClasses.*;
 //to test with linux	put /s/bach/d/under/adbriles/Thesis/TestFiles/TestWrite.txt
 //						get /s/bach/d/under/adbriles/Thesis/TestFiles/TestWrite.txt
 public class Client {
-	private static boolean isWindows = false;
+	private static boolean isWindows = true;
 	
 	
 	

@@ -31,6 +31,8 @@ public class SendChunkToClientEvent implements Runnable{
 			
 			storeChunk.setReadFile(true);
 			storeChunk.setReplacementChunk(true);
+			storeChunk.setAlterMetadata(false);//This is why I have two variables, so the client wont create or alter metadata
+			storeChunk.setCreateMetadata(false);
 			//sender.sendData(storeChunk);
 			//System.out.println("The message content is: " + message.getContent());
 			

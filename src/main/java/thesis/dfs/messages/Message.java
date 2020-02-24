@@ -11,6 +11,10 @@ public class Message implements Serializable{
 	private String messageType;
 	private String content;
 	
+	//if false, there is no need create metadata
+	private boolean createMetadata = true;
+	
+	private boolean alterMetadata = false;
 	
 	private boolean readFile = false;
 	
@@ -113,6 +117,22 @@ public class Message implements Serializable{
 
 	public void setReplacementChunk(boolean isReplacementChunk) {
 		this.isReplacementChunk = isReplacementChunk;
+	}
+
+	public boolean doCreateMetadata() {
+		return createMetadata;
+	}
+
+	public void setCreateMetadata(boolean createMetadata) {
+		this.createMetadata = createMetadata;
+	}
+
+	public boolean doAlterMetadata() {
+		return alterMetadata;
+	}
+
+	public void setAlterMetadata(boolean alterMetadata) {
+		this.alterMetadata = alterMetadata;
 	}
 	
 }

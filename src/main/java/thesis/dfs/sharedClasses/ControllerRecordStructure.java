@@ -12,10 +12,10 @@ import thesis.dfs.messages.Message;
 
 public class ControllerRecordStructure {//This is built on top of concurrent structures, but some compound actions need to happen
 	
-	//Server name mapped to a hashtable of files to their chunks
+	//Server name mapped to a hashtable of files to the chunks
 	private HashMap<String, HashMap<String, LinkedList<String>>> chunkServerToStoredFiles;
-	private LinkedList<String> chunkServerNames;
-	private HashMap<String, Long> chunkToAvailableSpace;
+	private LinkedList<String> chunkServerNames;//
+	private HashMap<String, Long> chunkToAvailableSpace;//
 	private HashMap<String, Integer> fileToReplicationCount;
 	
 	//This data structure is using a set to make sure I'm not constantly adding redundant chunks
@@ -23,16 +23,76 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	private HashMap<String, HashSet<String>> fileToAllChunks; 
 	private HashMap<String, LinkedList<String>> chunkFileToServersStoring;
 	
+	//Map structure for tracking if servers are alive.
+	//If the servers int value gets above two, its pretty likely dead.
+	private HashMap<String, Integer> serverToPingCount;
+	
+	
 	public synchronized void printChunkServers() {
 		for(String s: chunkServerNames) {
 			System.out.println(s);
 			System.out.flush();
 		}
 	}
+	//In the case of a node failure, find another server to replicate the chunk on. 
+	public synchronized LinkedList<String> getServerToStore(String chunk, int neededServers) {
+		LinkedList<String> availableServers = new LinkedList<String>();
+		for(int i = 0; i < neededServers; i++) {
+			for(String server: chunkServerNames) {
+				//if the server isn't listed under the chunk
+				if(!chunkFileToServersStoring.get(chunk).contains(server)) {
+					availableServers.add(server);
+				}
+			}
+		}
+		return availableServers;
+	}
+	
+	//If a server goes down, handle all the book keeping
+	public synchronized void removeAnyTrace(String serverName) {
+		// TODO Auto-generated method stub
+		chunkServerNames.removeFirstOccurrence(serverName);
+		chunkToAvailableSpace.remove(serverName);
+		serverToPingCount.remove(serverName);
+		//figure out what files the chunks was storing
+		HashMap<String, LinkedList<String>> filesServerStored = chunkServerToStoredFiles.get(serverName);
+		
+		for(Map.Entry<String, LinkedList<String>> m: filesServerStored.entrySet()) {
+			for(String chunkName: m.getValue()) {
+				int currentReplicationCount = fileToReplicationCount.get(chunkName);
+				fileToReplicationCount.put(chunkName, currentReplicationCount - 1);
+				System.out.println("The replication count has been reduced to: " + (currentReplicationCount - 1));
+				chunkFileToServersStoring.get(chunkName).removeFirstOccurrence(serverName);
+			}
+		}
+		chunkServerToStoredFiles.remove(serverName);
+		
+	}
+	//finds anythign with a replication lower than 3 and fixes it
+	public synchronized LinkedList<String> getReplicationUp(int desiredReplication) {
+		LinkedList<String> filesBelowReplication = new LinkedList<String>();
+		for(Map.Entry<String, Integer> m: fileToReplicationCount.entrySet()) {
+			if(m.getValue() < desiredReplication) {
+				filesBelowReplication.add(m.getKey());
+			}
+		}
+		return filesBelowReplication;
+	}
 	
 	public synchronized void decrementReplicationCount(String chunkFileName) {
 		Integer currentCount =  fileToReplicationCount.get(chunkFileName);
 		fileToReplicationCount.put(chunkFileName, (currentCount - 1));
+	}
+	
+	public synchronized void updateFromMajorHeartBeat(LinkedList<String> allChunks, String serverID) {
+		LinkedList<String> chunksAtServer = new LinkedList<String>();
+		
+		//for each controller known chunk, check if its in the reported list. If not, remove it from controller records.
+		//
+		for(Map.Entry<String, LinkedList<String>> fileName: chunkServerToStoredFiles.get(serverID).entrySet()) {
+			
+		}
+		
 	}
 	
 	//This is a garbage method. Should've just made another map, but I didn't want to complicate this
@@ -77,6 +137,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		fileToReplicationCount = new HashMap<String, Integer>();
 		fileToAllChunks = new HashMap<String, HashSet<String>>();
 		chunkFileToServersStoring = new HashMap<String, LinkedList<String>>();
+		serverToPingCount = new HashMap<String, Integer>();
 	}
 	//Adding a file will happen on a put request
 	//Add a file to the replication count, but actually add the file to the structure on an add chunk call
@@ -173,6 +234,22 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		chunkServerToStoredFiles.put(name, new HashMap<String, LinkedList<String>>());
 		chunkToAvailableSpace.put(name, availableSpace);
 		chunkServerNames.add(name);
+		serverToPingCount.put(name, 0);
+	}
+	
+	public synchronized boolean incrementServerChecks(String serverName) {
+		boolean isDead = false;
+		int checks = serverToPingCount.get(serverName) + 1;
+		if(checks == 2) {
+			isDead = true;
+		}
+		serverToPingCount.put(serverName, checks);
+		return isDead;
+	}
+	//Reset to zero instead of just decrementing. I want to give a chunk server a min and a half before 
+	//I murder it.
+	public synchronized void resetServerChecks(String serverName) {
+		serverToPingCount.put(serverName, 0);
 	}
 	
 	public synchronized void updateChunksSpace(String name, long availableSpace) {
@@ -181,15 +258,6 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 	
 	public synchronized LinkedList<String> getChunkServersForStorage(){
 		LinkedList<String> chunkServersToStore = new LinkedList<String>();
-		/*
-		while(chunkServersToStore.size() != 3) {//Get a list of chunk servers to store this chunk on
-			Random r = new Random(System.currentTimeMillis());
-			Integer possibleChunkServer = r.nextInt(chunkServerToStoredFiles.size());
-			if(!chunkServersToStore.contains(possibleChunkServer)) {
-				chunkServersToStore.add(possibleChunkServer);
-			}
-		}
-		*/
 		//I'm entirely aware that this is a terrible way to do this, but Java doesn't have 
 		//A nice way to keep a sorted hashmap by value, and it has to be by value
 		
@@ -210,6 +278,10 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		return chunkServersToStore;
 	}
 	
+	public synchronized LinkedList<String> getAllChunkServers(){
+		return new LinkedList<String>(chunkServerNames);
+	}
+	
 	public synchronized LinkedList<String> getChunkServersForStorageLessThanReplication(){
 		LinkedList<String> chunkServersToStore = new LinkedList<String>();
 		for(Map.Entry<String, Long> m: chunkToAvailableSpace.entrySet()) {
@@ -217,6 +289,9 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		}
 		return chunkServersToStore;
 	}
+
+
+
 
 	
 }

@@ -2,6 +2,7 @@ package thesis.dfs.transport;
 
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,6 +53,34 @@ public class TCPReceiverThread implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	public void incrementFileWrtites(String chunkName) {
+		String metadataName = chunkName + ".metadata";
+		try {
+			FileInputStream fis = new FileInputStream(metadataName);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			ois.close();
+			fis.close();
+			
+			ChunkMetadata meta = (ChunkMetadata)ois.readObject(); 
+			meta.updateTimestamp();
+			meta.incrementVersion();
+			System.out.println("The chunk, " + chunkName + " had its version incremented to: " + meta.getVersion());
+			
+			FileOutputStream fos = new FileOutputStream(metadataName);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			
+			oos.writeObject(meta);
+			oos.close();
+			fos.close();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public void readAndStoreFile(Message message) throws IOException {
 		DataInputStream dis = new DataInputStream(socket.getInputStream());
@@ -76,8 +105,14 @@ public class TCPReceiverThread implements Runnable{
 		fos.close();
 		dis.close();
 		
-		createMetadata(chunkName);
-
+		if(message.doCreateMetadata()) {
+			createMetadata(chunkName);
+		} 
+		
+		if(message.doAlterMetadata()) {
+			incrementFileWrtites(chunkName);
+		}
+		
 	}
 	
 	@Override
