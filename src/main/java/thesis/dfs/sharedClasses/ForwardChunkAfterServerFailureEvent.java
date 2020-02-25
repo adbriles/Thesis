@@ -15,6 +15,7 @@ public class ForwardChunkAfterServerFailureEvent implements Runnable{
 		this.message = message;
 	}
 	@Override
+	//Message content: hostName hostPort chunkName
 	public void run() {
 		// TODO Auto-generated method stub
 		EventFactory eventFactory = EventFactory.getInstance();
@@ -23,14 +24,14 @@ public class ForwardChunkAfterServerFailureEvent implements Runnable{
 		//file to send, host name, host port
 		String[] messageSplit = message.getContent().split(" ");
 
-		String[] chunkNameParts = messageSplit[1].split("_");
+		String[] chunkNameParts = messageSplit[2].split("_");
 		System.out.println("I'm sending a file to: " + message.getContent());
 		
 		try {
-			TCPSender sender = new TCPSender(new Socket(messageSplit[1], Integer.parseInt(messageSplit[2])));
+			TCPSender sender = new TCPSender(new Socket(messageSplit[0], Integer.parseInt(messageSplit[1])));
 			Message storeChunk = new Message("StoreChunk", chunkNameParts[0] + " " + messageSplit[0], new LinkedList<String>());
 			storeChunk.setReplacementChunk(false);//Make sure a heartbeat updates the controller
-			sender.sendFile(new File(message.getContent().split("\\s+")[0]), storeChunk);
+			sender.sendFile(new File(message.getContent().split("\\s+")[2]), storeChunk);
 			
 		} catch(IOException e) {
 			e.printStackTrace();
