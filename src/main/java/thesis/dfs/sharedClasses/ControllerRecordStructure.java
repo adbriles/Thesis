@@ -76,7 +76,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		chunkServerToStoredFiles.remove(serverName);
 		
 	}
-	//finds anythign with a replication lower than 3 and fixes it
+	//finds anythign with a replication lower than the desired replication and fixes it
 	public synchronized LinkedList<String> getReplicationUp(int desiredReplication) {
 		LinkedList<String> filesBelowReplication = new LinkedList<String>();
 		for(Map.Entry<String, Integer> m: fileToReplicationCount.entrySet()) {
@@ -270,6 +270,47 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		LinkedList<String> chunkServersToStore = new LinkedList<String>();
 		//I'm entirely aware that this is a terrible way to do this, but Java doesn't have 
 		//A nice way to keep a sorted hashmap by value, and it has to be by value
+		//One of the major issues is if I only allocate by which server has the least space
+		//I always end up allocating to the same chunks if I only use the storage space a chunk has left. 
+		//To get around this, I'll allocate based on how many writes chunk servers have. 
+		//If a chunk server has the system wide minimum of chunks stored, then they will get chosen to store chunks
+		//If there aren't three servers with the system min, servers with minimum storage will receive the chunks.
+		//anything in the middle will get skipped, but thats the point. If a server has next to no writes, they get writes
+		//but any server with a lot of storage space will receive a ton of writes. Weird algorithm, but it should work.
+		
+		
+		int minChunks = Integer.MAX_VALUE;
+		LinkedList<String> serversWithMinimumChunks = new LinkedList<String>();
+		for(Map.Entry<String, HashMap<String, LinkedList<String>>> m: chunkServerToStoredFiles.entrySet()) {
+			int serversChunkCount = 0;
+			//counts total chunks
+			for(Map.Entry<String, LinkedList<String>> file: m.getValue().entrySet()) {
+				for(String chunk: file.getValue()) {
+					serversChunkCount++;
+				}
+			}
+			if(serversChunkCount < minChunks) {
+				//reset the list we were keeping track of
+				serversWithMinimumChunks = new LinkedList<String>();
+				minChunks = serversChunkCount;
+				serversWithMinimumChunks.add(m.getKey());
+			} else if(serversChunkCount ==  minChunks){//add to the list of chunks with a minimum number matching current min
+				serversWithMinimumChunks.add(m.getKey());
+			}//else do nothing
+		}
+		
+		if(serversWithMinimumChunks.size() >= 3) {//just return 3 to make sure every server is getting writes. 
+			
+			for(int i = 0; i < 3; i++) {
+				chunkServersToStore.add(serversWithMinimumChunks.get(i));
+			}
+		} else {
+			for(String s: serversWithMinimumChunks) {
+				chunkServersToStore.add(s);
+			}
+		}
+		
+		
 		
 		while(chunkServersToStore.size() != 3) {
 			Long currentMin = Long.MAX_VALUE;
@@ -281,7 +322,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 				}
 			}
 			chunkServersToStore.add(nameMin);
-			
+
 		}
 
 		
