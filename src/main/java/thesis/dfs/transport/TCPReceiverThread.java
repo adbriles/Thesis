@@ -58,19 +58,20 @@ public class TCPReceiverThread implements Runnable{
 		try {
 			FileInputStream fis = new FileInputStream(metadataName);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			ois.close();
-			fis.close();
 			
 			ChunkMetadata meta = (ChunkMetadata)ois.readObject(); 
 			meta.updateTimestamp();
 			meta.incrementVersion();
 			System.out.println("The chunk, " + chunkName + " had its version incremented to: " + meta.getVersion());
 			
+			ois.close();
+			fis.close();
 			FileOutputStream fos = new FileOutputStream(metadataName);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			
 			oos.writeObject(meta);
 			oos.close();
+			fos.close();
 			
 		} catch(IOException e) {
 			e.printStackTrace();
