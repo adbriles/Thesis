@@ -42,6 +42,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 				//if the server isn't listed under the chunk
 				if(!chunkFileToServersStoring.get(chunk).contains(server)) {
 					availableServers.add(server);
+					break;
 				}
 			}
 		}
