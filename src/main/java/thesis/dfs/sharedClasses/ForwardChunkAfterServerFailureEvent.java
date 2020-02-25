@@ -29,7 +29,7 @@ public class ForwardChunkAfterServerFailureEvent implements Runnable{
 		
 		try {
 			TCPSender sender = new TCPSender(new Socket(messageSplit[0], Integer.parseInt(messageSplit[1])));
-			Message storeChunk = new Message("StoreChunk", chunkNameParts[0] + " " + messageSplit[0], new LinkedList<String>());
+			Message storeChunk = new Message("StoreChunk", chunkNameParts[0] + " " + messageSplit[2], new LinkedList<String>());
 			storeChunk.setReplacementChunk(false);//Make sure a heartbeat updates the controller
 			sender.sendFile(new File(message.getContent().split("\\s+")[2]), storeChunk);
 			
