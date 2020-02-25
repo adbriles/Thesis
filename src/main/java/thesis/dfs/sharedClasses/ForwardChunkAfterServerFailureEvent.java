@@ -24,6 +24,7 @@ public class ForwardChunkAfterServerFailureEvent implements Runnable{
 		String[] messageSplit = message.getContent().split(" ");
 
 		String[] chunkNameParts = messageSplit[1].split("_");
+		System.out.println("I'm sending a file to: " + message.getContent());
 		
 		try {
 			TCPSender sender = new TCPSender(new Socket(messageSplit[1], Integer.parseInt(messageSplit[2])));

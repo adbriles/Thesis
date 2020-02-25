@@ -91,7 +91,7 @@ public class CheckServers implements Runnable {
 		// TODO Auto-generated method stub
 		System.out.println("About to store the chunk, " + chunkName + ", from the server: " + serverToSendTo);
 		String getValidServer = EventFactory.hostToFiles.getGoodChunk(chunkName);
-		String[] serverParts = serverToSendTo.split(" ");
+		String[] serverParts = getValidServer.split(" ");
 		TCPSender sender = new TCPSender(new Socket(serverParts[0], Integer.parseInt(serverParts[1])));
 		Message forwardGoodChunk = new Message("ForwardChunkAfterServerFailure");
 		forwardGoodChunk.setContent(chunkName + " " + serverToSendTo);
