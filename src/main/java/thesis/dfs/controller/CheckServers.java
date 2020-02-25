@@ -95,7 +95,7 @@ public class CheckServers implements Runnable {
 		TCPSender sender = new TCPSender(new Socket(serverParts[0], Integer.parseInt(serverParts[1])));
 		Message forwardGoodChunk = new Message("ForwardChunkAfterServerFailure");
 		forwardGoodChunk.setContent(chunkName + " " + serverToSendTo);
-			
+		sender.sendData(forwardGoodChunk);
 		
 		
 	}
