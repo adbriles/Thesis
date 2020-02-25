@@ -48,6 +48,14 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		return availableServers;
 	}
 	
+	public String getGoodChunk(String chunkName) {
+		// TODO Auto-generated method stub
+		Random rand = new Random(System.currentTimeMillis());
+		//What a line of code...out of the list of good chunks just chooses one randomly.
+		return chunkFileToServersStoring.get(chunkName).get(rand.nextInt(chunkFileToServersStoring.get(chunkName).size()));
+		
+	}
+	
 	//If a server goes down, handle all the book keeping
 	public synchronized void removeAnyTrace(String serverName) {
 		// TODO Auto-generated method stub
@@ -115,6 +123,8 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		}
 		return uncorruptedServer;
 	}
+	
+	
 	
 	public synchronized void printRecordStructure() {
 		
@@ -289,6 +299,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		}
 		return chunkServersToStore;
 	}
+
 
 
 

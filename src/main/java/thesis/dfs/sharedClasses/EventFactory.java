@@ -84,9 +84,11 @@ public class EventFactory {
 			return new GetFileFromChunkServerEvent(message);
 		} else if(message.getMessageType().equals("AreYouAlive")) {
 			return new ServerAliveEvent(message);
-		}else if(message.getMessageType().equals("ImAlive")) {
+		} else if(message.getMessageType().equals("ImAlive")) {
 			return new RecordServerStillAliveEvent(message);
-		}
+		} else if(message.getMessageType().equals("ForwardChunkAfterServerFailure")) {
+			return new ForwardChunkAfterServerFailureEvent(message);
+		} 
 		
 		return null;		
 	}

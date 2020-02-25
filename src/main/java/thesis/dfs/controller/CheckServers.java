@@ -87,9 +87,17 @@ public class CheckServers implements Runnable {
 		}
 	}
 
-	private void requestReplication(String chunkName, String serverToSendTo) {
+	private void requestReplication(String chunkName, String serverToSendTo) throws NumberFormatException, UnknownHostException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("About to store the chunk, " + chunkName + ", from the server: " + serverToSendTo);
+		String getValidServer = EventFactory.hostToFiles.getGoodChunk(chunkName);
+		String[] serverParts = serverToSendTo.split(" ");
+		TCPSender sender = new TCPSender(new Socket(serverParts[0], Integer.parseInt(serverParts[1])));
+		Message forwardGoodChunk = new Message("ForwardChunkAfterServerFailure");
+		forwardGoodChunk.setContent(chunkName + " " + serverToSendTo);
+			
+		
+		
 	}
 
 }

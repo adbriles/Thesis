@@ -18,7 +18,7 @@ public class StoreChunkEvent implements Runnable{
 	}
 	
 
-	//Runs on chunk server. Reads 
+	//Runs on chunk server. 
 	public void run() {
 		EventFactory eventFactory = EventFactory.getInstance();
 		String[] messageSplit = message.getContent().split(" ");
