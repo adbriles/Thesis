@@ -41,7 +41,7 @@ public class CheckServers implements Runnable {
 				elapsedTime = (new Date()).getTime() - startTime;
 			}
 			
-			//Execute minor heartbeat
+			
 			for(String serverName : EventFactory.hostToFiles.getAllChunkServers()) {
 				String[] splitName = serverName.split(" ");
 				try {
@@ -53,6 +53,13 @@ public class CheckServers implements Runnable {
 						LinkedList<String> chunksToReplicate = EventFactory.hostToFiles.getReplicationUp(desiredReplication);
 						for(String chunk: chunksToReplicate) {
 							LinkedList<String> newServers = EventFactory.hostToFiles.getServerToStore(chunk, 1);
+							
+							for(String what: newServers) {
+								System.out.println("Going to store chunk: " + chunk + ", at server: " + what);
+							}
+							
+							
+							
 							if(newServers.size() != 1) {
 								//too many servers have died, and replication needs to drop
 								desiredReplication--;
