@@ -71,7 +71,6 @@ public class TCPReceiverThread implements Runnable{
 			
 			oos.writeObject(meta);
 			oos.close();
-			fos.close();
 			
 		} catch(IOException e) {
 			e.printStackTrace();
