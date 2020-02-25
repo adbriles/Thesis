@@ -41,6 +41,7 @@ public class StoreChunkEvent implements Runnable{
 		}
 		//If the sent file isn't a replacement for a corrupted chunk, then update records
 		if(!message.isReplacementChunk()) {
+			System.out.println("The message is causing issues: " + message.getContent());
 			eventFactory.chunkRecords.addChunkFile(message.getContent().split("\\s+")[1]);
 		}
 	}
