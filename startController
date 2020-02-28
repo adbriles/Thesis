@@ -1,0 +1,4 @@
+#!/bin/bash
+cd build/classes/java/main
+java thesis.dfs.controller.Controller 35001
+
