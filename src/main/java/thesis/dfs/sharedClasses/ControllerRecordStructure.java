@@ -104,8 +104,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 		
 	}
 	
-	//This is a garbage method. Should've just made another map, but I didn't want to complicate this
-	//Record structure and its maintenance any further.
+
 	public synchronized String findBackupChunk(Message corruptionMessage) {
 		String serverName = corruptionMessage.getSenderHostName() + " " + corruptionMessage.getSenderPort();
 		String uncorruptedServer = "";
@@ -300,11 +299,27 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 			}//else do nothing
 		}
 		
-		if(serversWithMinimumChunks.size() >= 3) {//just return 3 to make sure every server is getting writes. 
+		Random randGenerator = new Random(System.currentTimeMillis());
+		
+		/* To make sure chunks of a file don't stay together, random generation is to be used.
+		 * I a lot of chunk servers don't have any writes, chunks of file won't necessarily stay together. 
+		 * */
+		if(serversWithMinimumChunks.size() > 3) {
 			
-			for(int i = 0; i < 3; i++) {
+			
+			//Big change before final assignment to make sure chunks don't always stay together....
+			//if a bunch of the 
+			/*for(int i = 0; i < 3; i++) {
+				
 				chunkServersToStore.add(serversWithMinimumChunks.get(i));
+			}*/
+			while(chunkServersToStore.size() != 3) {
+				String possibleAddition = serversWithMinimumChunks.get(randGenerator.nextInt(chunkServersToStore.size()));
+				if(!chunkServersToStore.contains(possibleAddition)) {
+					chunkServersToStore.add(possibleAddition);
+				}
 			}
+			
 		} else {
 			for(String s: serversWithMinimumChunks) {
 				chunkServersToStore.add(s);

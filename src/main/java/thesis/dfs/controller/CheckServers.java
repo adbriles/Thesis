@@ -54,9 +54,9 @@ public class CheckServers implements Runnable {
 						for(String chunk: chunksToReplicate) {
 							LinkedList<String> newServers = EventFactory.hostToFiles.getServerToStore(chunk, 1);
 							
-							for(String what: newServers) {
-								System.out.println("Going to store chunk: " + chunk + ", at server: " + what);
-							}
+							//for(String what: newServers) {
+							//	System.out.println("Going to store chunk: " + chunk + ", at server: " + what);
+							//}
 							
 							
 							
