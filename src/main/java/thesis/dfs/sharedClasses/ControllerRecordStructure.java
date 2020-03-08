@@ -338,6 +338,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 				}
 			}
 			chunkServersToStore.add(nameMin);
+			
 
 		}
 
