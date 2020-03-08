@@ -317,7 +317,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 				chunkServersToStore.add(serversWithMinimumChunks.get(i));
 			}*/
 			while(chunkServersToStore.size() != 3) {
-				String possibleAddition = serversWithMinimumChunks.get(randGenerator.nextInt(chunkServersToStore.size()));
+				String possibleAddition = serversWithMinimumChunks.get(randGenerator.nextInt(serversWithMinimumChunks.size()));
 				if(!chunkServersToStore.contains(possibleAddition)) {
 					chunkServersToStore.add(possibleAddition);
 				}
