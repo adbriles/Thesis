@@ -1,0 +1,5 @@
+#!/bin/bash
+cd build/classes/java/main
+
+java thesis.dfs.client.Client boise 35001
+
