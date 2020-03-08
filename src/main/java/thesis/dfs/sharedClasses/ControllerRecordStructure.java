@@ -290,6 +290,7 @@ public class ControllerRecordStructure {//This is built on top of concurrent str
 				}
 				
 				
+				
 			}
 			if(serversChunkCount < minChunks) {
 				//reset the list we were keeping track of
