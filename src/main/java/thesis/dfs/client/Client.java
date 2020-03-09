@@ -149,7 +149,6 @@ public class Client {
 					outChunk.write(buffer, 0, bytesAmount);
 				}
 				
-				String metadataName = chunkName + ".metadata";//This code needs to go. 
 				partFileNames.add(chunkName);
 				sequenceNumber++;
 				chunkNumber++;	
